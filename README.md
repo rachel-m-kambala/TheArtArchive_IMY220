@@ -8,8 +8,6 @@ The Art Archive is a photo-sharing web application that allows artists to showca
 - Add descriptions and hashtags
 - Local and Global feeds
 - User profiles
-- Like and comment on posts
-- Search for artwork and creators
 
 ## Technologies
 TBD
