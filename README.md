@@ -16,16 +16,10 @@ TBD
 
 1. Clone the repository:
    git clone https://github.com/rachel-m-kambala/TheArtArchive_IMY220.git
-
-
-2. Navigate to the project:
-   cd TheArtArchive_IMY220
    
+2. Install dependencies:
 
-3. Install dependencies:
-
-
-4. Start the development server:
+3. Start the development server:
 
 ## Authors
 
