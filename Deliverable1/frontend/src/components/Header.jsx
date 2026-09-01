@@ -5,7 +5,7 @@ export default function Header() {
     return (
         <header className="header">
             <Link to="/home" className="headerLogo">
-                <img src="/images/logo.png" alt="Logo" />
+                <img src="../assets/images/artarticle.png" alt="Logo" />
             </Link>
             <nav className="mainNav">
                 <NavLink to="/discover" className="mainNavLink">Discover</NavLink>
@@ -15,11 +15,11 @@ export default function Header() {
             </nav>
 
             <div className="headerActions">
-                <Link to="/login" className="headerActionLink">
-                    Login
+                <Link to="/" className="headerActionLink">
+                    Log Out
                 </Link>
-                <Link to="/signup" className="headerActionLink">
-                    Become An Artist
+                <Link to="/profile" className="headerActionLink">
+                    Profile
                 </Link>
             </div>
         </header>
