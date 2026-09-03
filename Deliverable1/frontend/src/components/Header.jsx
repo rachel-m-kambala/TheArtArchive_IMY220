@@ -5,7 +5,7 @@ import { NavLink, Link } from "react-router-dom";
 export default function Header() {
     return (
         <header className="header">
-            <Link to="/home" className="headerLogo">
+            <Link to="/" className="headerLogo">
                 <img src="../assets/images/artarticle.png" alt="Logo" />
             </Link>
             <nav className="mainNav">
@@ -16,12 +16,8 @@ export default function Header() {
             </nav>
 
             <div className="headerActions">
-                <Link to="/" className="headerActionLink">
-                    Log Out
-                </Link>
-                <Link to="/profile" className="headerActionLink">
-                    Profile
-                </Link>
+                <Link to="/login">Log In</Link>
+                <Link to="/signup">Become An Artist</Link>
             </div>
         </header>
     );

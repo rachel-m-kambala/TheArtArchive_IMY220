@@ -1,13 +1,12 @@
 import React from "react";
-import LoginForm from "../components/LoginForm.jsx";
-import SignupForm from "../components/SignupForm.jsx";
+import { Link } from "react-router-dom";
 
 function Splash() {
     return (
         <main className="splash-page">
             <section className="hero">
-                <div className="hero-content">
-                    <p className="eyebrow">
+                <div className="heroContent">
+                    <p className="heading">
                         THE ART ARCHIVE
                     </p>
 
@@ -17,13 +16,18 @@ function Splash() {
                         Discover a community where photographers,
                         artists, and digital creators share,
                         explore, and celebrate visual creativity.
+                        Showcase your work and find inspiration—all in one digital gallery.
                     </p>
                 </div>
 
-                <section className="authentication">
-                    <LoginForm />
-                    <SignupForm />
-                </section>
+                <div className="hero-actions">
+                    <Link to="/signup" className="signupBtn">
+                        Become An Artist
+                    </Link>
+                    <Link to="/login" className="loginBtn">
+                        Log In
+                    </Link>
+                </div>
             </section>
         </main>
     );
