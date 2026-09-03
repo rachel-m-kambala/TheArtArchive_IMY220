@@ -1,3 +1,4 @@
+import React from "react";
 import Header from "../components/Header.jsx";
 import Profile from "../components/Profile.jsx";
 import EditProfile from "../components/EditProfile.jsx";

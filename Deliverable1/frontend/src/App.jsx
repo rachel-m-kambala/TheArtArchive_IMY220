@@ -1,4 +1,5 @@
 //u23559129 Rachel Kambala
+import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import Splash from "./pages/Splash.jsx";

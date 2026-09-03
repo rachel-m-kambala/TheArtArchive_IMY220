@@ -1,3 +1,4 @@
+import React from "react";
 function PostImage({ image, title }) {
     return (
         <figure className="post-image-container">

@@ -1,3 +1,4 @@
+import React from "react";
 import ProfilePreview from "./ProfilePreview";
 
 function Friends({ friends }) {

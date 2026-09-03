@@ -1,3 +1,4 @@
+import React from "react";
 function Profile({ user, isOwnProfile = false }) {
     return (
         <section className="profile">

@@ -1,3 +1,4 @@
+import React from "react";
 import PostPreview from "./PostPreview";
 
 function UserPosts({ posts }) {

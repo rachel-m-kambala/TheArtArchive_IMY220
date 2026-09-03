@@ -1,6 +1,5 @@
 //u23559129 Rachel Kambala
-import { Link } from "react-router-dom";
-
+import React from "react";
 import { Link } from "react-router-dom";
 
 function PostPreview({ post }) {

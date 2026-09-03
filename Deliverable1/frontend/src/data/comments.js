@@ -1,4 +1,4 @@
-[
+const comments = [
     {
         "id": 1,
         "comments": [
@@ -107,3 +107,5 @@
         ]
     }
 ]
+
+export default comments;

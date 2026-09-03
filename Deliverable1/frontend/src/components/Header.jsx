@@ -1,4 +1,5 @@
 //u23559129 Rachel Kambala
+import React from "react";
 import { NavLink, Link } from "react-router-dom";
 
 export default function Header() {

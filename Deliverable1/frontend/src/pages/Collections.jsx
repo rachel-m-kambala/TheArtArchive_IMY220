@@ -1,3 +1,4 @@
+import React from "react";
 import Header from "../components/Header.jsx";
 import PostPreview from "../components/PostPreview.jsx";
 import posts from "../data/posts.js";

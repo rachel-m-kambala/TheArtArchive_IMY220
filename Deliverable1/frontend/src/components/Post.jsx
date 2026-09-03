@@ -1,3 +1,4 @@
+import React from "react";
 import PostImage from "./PostImage";
 
 function Post({ post }) {
