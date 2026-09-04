@@ -1,3 +1,11 @@
+import luna from "../assets/images/profile/pro7.jpg";
+import oliver from "../assets/images/profile/pro3.jpg";
+import han from "../assets/images/profile/pro5.jpg";
+import elena from "../assets/images/profile/pro2.jpg";
+import chloe from "../assets/images/profile/pro4.jpg";
+import kai from "../assets/images/profile/pro6.jpg";
+import samira from "../assets/images/profile/pro1.jpg";
+
 const users = [
     {
         id: 1,
@@ -6,7 +14,7 @@ const users = [
         pronouns: "she/her",
         role: "Vector & Minimalist Artist",
         bio: "Exploring serene forms, botanical elements, and quiet midnight aesthetics through modern vector art.",
-        profileImage: "../assets/images/profile-artsy5.jpg",
+        profileImage: luna,
         followers: 2450,
         following: 310,
         artworks: 58,
@@ -19,7 +27,7 @@ const users = [
         pronouns: "he/him",
         role: "Graphic Designer",
         bio: "Capturing warm tones, feline grace, and earth-inspired graphic silhouettes.",
-        profileImage: "../assets/images/profile-maya.jpg",
+        profileImage: oliver,
         followers: 1890,
         following: 425,
         artworks: 34,
@@ -32,7 +40,7 @@ const users = [
         pronouns: "she/her",
         role: "Illustrator",
         bio: "Illustrator creating colourful worlds one drawing at a time.",
-        profileImage: "../assets/images/profile-han.jpg",
+        profileImage: han,
         followers: 870,
         following: 210,
         artworks: 35,
@@ -45,7 +53,7 @@ const users = [
     pronouns: "she/her",
     role: "Oil & Impressionist Painter",
     bio: "Chasing golden hour light across Mediterranean seascapes with traditional oils and expressive brushwork.",
-    profileImage: "../assets/images/profile-elena.jpg",
+    profileImage: elena,
     followers: 3340,
     following: 512,
     artworks: 62,
@@ -58,7 +66,7 @@ const users = [
     pronouns: "she/her",
     role: "Fashion & Character Illustrator",
     bio: "Stylized vector silhouettes, chic patterns, and modern runway-inspired digital character design.",
-    profileImage: "../assets/images/profile-chloe.jpg",
+    profileImage: chloe,
     followers: 1560,
     following: 280,
     artworks: 41,
@@ -71,7 +79,7 @@ const users = [
     pronouns: "he/him",
     role: "Pixel & Urban Artist",
     bio: "Atmospheric pixel art and twilight cityscapes capturing quiet urban solitude.",
-    profileImage: "../assets/images/profile-kai.jpg",
+    profileImage: kai,
     followers: 4210,
     following: 165,
     artworks: 73,
@@ -84,7 +92,7 @@ const users = [
     pronouns: "she/her",
     role: "Graphic & Digital Painter",
     bio: "Minimalist coastal views, bold color planes, and serene ocean moments under the sun.",
-    profileImage: "../assets/images/profile-samira.jpg",
+    profileImage: samira,
     followers: 2780,
     following: 340,
     artworks: 50,

@@ -1,3 +1,11 @@
+import blueHairWoman from "../assets/images/bluehairwoman.jpg";
+import cat from "../assets/images/cat.jpg";
+import dreamState from "../assets/images/creativity.jpg";
+import landscape from "../assets/images/landscape.jpg";
+import randomWoman from "../assets/images/randomwoman.png";
+import skyline from "../assets/images/skyline.jpg";
+import sunset from "../assets/images/sunset.png";
+
 const posts = [
     {
         id: 1,
@@ -7,7 +15,7 @@ const posts = [
         artist: "lunavance",
         artistId: 1,
         artistName: "Luna Vance",
-        image: "../assets/images/bluehairwoman.jpg",
+        image: blueHairWoman,
         hashtags: ["#VectorArt", "#DigitalArt", "#MinimalistArt", "#ContemporaryArt"],
         category: ["Vector Art", "Digital Art"],
         createdAt: "2026-08-30T14:30:00",
@@ -16,6 +24,7 @@ const posts = [
         albums: ["Silent Portraits"],
         reported: 0
     },
+
     {
         id: 2,
         title: "Feline Shadows at Dusk",
@@ -24,7 +33,7 @@ const posts = [
         artist: "oliverthorne",
         artistId: 2,
         artistName: "Oliver Thorne",
-        image: "../assets/images/cat.jpg",
+        image: cat,
         hashtags: ["#BohoArt", "#WarmPalette", "#SilhouetteArt", "#CatLovers"],
         category: ["Digital Illustration", "Boho Design"],
         createdAt: "2026-08-29T18:45:00",
@@ -33,6 +42,7 @@ const posts = [
         albums: ["I love Animals"],
         reported: 0
     },
+
     {
         id: 3,
         title: "Mindscape Unbound",
@@ -41,7 +51,7 @@ const posts = [
         artist: "hanDraws",
         artistId: 3,
         artistName: "Han Draws",
-        image: "../assets/images/dream-state.jpg",
+        image: dreamState,
         hashtags: ["#ConceptArt", "#DigitalPainting", "#DigitalArt", "#Surrealism"],
         category: ["Digital Art", "Surrealism"],
         createdAt: "2026-08-28T11:20:00",
@@ -50,6 +60,7 @@ const posts = [
         albums: ["Worlds of Imagination"],
         reported: 1
     },
+
     {
         id: 4,
         title: "Golden Hour",
@@ -58,7 +69,7 @@ const posts = [
         artist: "elenarostova",
         artistId: 4,
         artistName: "Elena Rostova",
-        image: "../assets/images/landscape.jpg",
+        image: landscape,
         hashtags: ["#Impressionism", "#LandscapeArt", "#TraditionalArt", "#SunsetLovers"],
         category: ["Painting", "Physical Art", "Landscape"],
         createdAt: "2026-08-27T09:15:00",
@@ -67,6 +78,7 @@ const posts = [
         albums: ["Paintings"],
         reported: 0
     },
+
     {
         id: 5,
         title: "Chic in Cobalt",
@@ -75,7 +87,7 @@ const posts = [
         artist: "thechloebennett",
         artistId: 5,
         artistName: "Chloe Bennett",
-        image: "../assets/images/randomwoman.png",
+        image: randomWoman,
         hashtags: ["#FashionIllustration", "#ModStyle", "#CharacterDesign"],
         category: ["Digital Art", "Fashion Illustration", "Character Design"],
         createdAt: "2026-08-29T09:14:30",
@@ -84,6 +96,7 @@ const posts = [
         albums: ["Runway Ready"],
         reported: 0
     },
+
     {
         id: 6,
         title: "City Twilight Reverie",
@@ -92,7 +105,7 @@ const posts = [
         artist: "kaitakahashi",
         artistId: 6,
         artistName: "Takahashi Illustrations",
-        image: "../assets/images/skyline.png",
+        image: skyline,
         hashtags: ["#Cityscape", "#PixelArt", "#UrbanArt", "#UrbanAesthetic"],
         category: ["Digital Art", "Pixel Art", "Cityscape"],
         createdAt: "2026-08-21T08:21:00",
@@ -101,6 +114,7 @@ const posts = [
         albums: ["Cityscapes"],
         reported: 0
     },
+
     {
         id: 7,
         title: "Solitude at Golden Tide",
@@ -109,7 +123,7 @@ const posts = [
         artist: "samirakhan",
         artistId: 7,
         artistName: "Samira Khan",
-        image: "../assets/images/sunset.png",
+        image: sunset,
         hashtags: ["#GraphicArt", "#FlatDesign", "#MinimalistLandscape", "#SereneArt"],
         category: ["Digital Painting", "Graphic Design", "Minimalist"],
         createdAt: "2026-08-31T12:01:00",
