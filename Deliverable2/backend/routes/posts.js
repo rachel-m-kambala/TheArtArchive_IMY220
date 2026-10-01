@@ -47,7 +47,8 @@ router.post("/", async (req, res) => {
             title,
             description,
             image,
-            hashtags
+            hashtags,
+            category
         } = req.body;
 
         if (!userId || !title || !description || !image) {
@@ -62,6 +63,7 @@ router.post("/", async (req, res) => {
             description,
             image,
             hashtags: hashtags || [],
+            category: category || [],
             likes: []
         });
 
@@ -75,13 +77,14 @@ router.post("/", async (req, res) => {
 
 router.put("/:id", async (req, res) => {
     try {
-        const { description, hashtags } = req.body;
+        const { description, hashtags, category } = req.body;
 
         const post = await updatePost(
             req.params.id,
             {
                 description,
-                hashtags
+                hashtags,
+                category
             }
         );
 
