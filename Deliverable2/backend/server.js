@@ -1,17 +1,39 @@
+//{} ""
 const express = require("express");
 const cors = require("cors");
+require("dotenv").config();
+
+const { connectDB } = require("./database.js");
+
+const postRoutes = require("./routes/posts.js");
+const userRoutes = require("./routes/user.js");
+const albumRoutes = require("./routes/albums.js");
+const commentRoutes = require("./routes/comments.js");
 
 const app = express();
 
 const PORT = process.env.PORT || 5000;
 
 app.use(cors());
-
 app.use(express.json());
 
+app.use("/api/posts", postRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/albums", albumRoutes);
+app.use("/api/comments", commentRoutes);
+
+async function startServer(){
+    await connectDB();
+
+    app.listen(PORT, "0.0.0.0", () => {
+        console.log(`Server running on${PORT}`);
+    });
+}
+
+startServer();
+
 app.get("/", (req, res) => {
-    res.status(200).json({
-        success: true,
+    res.json({
         message: "The Art Archive API is running."
     });
 });
