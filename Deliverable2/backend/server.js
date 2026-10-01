@@ -22,16 +22,6 @@ app.use("/api/users", userRoutes);
 app.use("/api/albums", albumRoutes);
 app.use("/api/comments", commentRoutes);
 
-async function startServer(){
-    await connectDB();
-
-    app.listen(PORT, "0.0.0.0", () => {
-        console.log(`Server running on${PORT}`);
-    });
-}
-
-startServer();
-
 app.get("/", (req, res) => {
     res.json({
         message: "The Art Archive API is running."
@@ -113,10 +103,29 @@ app.post("/api/auth/signin", (req, res) => {
     });
 });
 
-app.listen(PORT, "0.0.0.0", () => {
-
-    console.log(
-        `The Art Archive API is running on port ${PORT}`
-    );
-
+app.use((req, res) => {
+    res.status(404).json({
+        message: "Route not found."
+    });
 });
+
+async function startServer(){
+    try{
+        await connectDB();
+
+        app.listen(PORT, "0.0.0.0", () => {
+            console.log(
+                `The Art Archive API is running on port ${PORT}`
+            );
+        });
+    } catch (error){
+        console.error(
+            "Failed to start server:",
+            error
+        );
+
+        process.exit(1);
+    }
+}
+
+startServer();
