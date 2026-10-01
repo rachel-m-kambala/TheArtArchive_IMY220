@@ -1,31 +1,109 @@
-import React from "react";
-import { useState } from "react";
+//Rachel Kambala u23559129
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-function EditPost({ post }) {
-    const [description, setDescription] = useState(
-        post.description
-    );
+const API_URL =
+    import.meta.env.VITE_API_URL || "http://localhost:3000";
 
-    const [hashtags, setHashtags] = useState(
-        post.hashtags.join(" ")
-    );
+function EditPost({ post, setPost }) {
+    const navigate = useNavigate();
 
-    function handleSubmit(event) {
+    const [description, setDescription] =
+        useState(post.description);
+
+    const [hashtags, setHashtags] =
+        useState(post.hashtags?.join(" ") || "");
+
+    const [message, setMessage] = useState("");
+
+    async function handleUpdate(event) {
         event.preventDefault();
 
-        console.log({
-            description,
-            hashtags
-        });
+        const hashtagArray = hashtags
+            .split(" ")
+            .map((tag) => tag.trim())
+            .filter((tag) => tag !== "")
+            .map((tag) =>
+                tag.startsWith("#") ? tag : `#${tag}`
+            );
 
-        alert("Artwork information updated.");
+        try {
+            const response = await fetch(
+                `${API_URL}/api/posts/${post._id}`,
+                {
+                    method: "PUT",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        description,
+                        hashtags: hashtagArray
+                    })
+                }
+            );
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(
+                    data.message ||
+                    "Unable to update post."
+                );
+            }
+
+            setPost(data);
+
+            setMessage(
+                "Post updated successfully."
+            );
+
+        } catch (error) {
+            setMessage(error.message);
+        }
+    }
+
+    async function handleDelete() {
+        const confirmed = window.confirm(
+            "Are you sure you want to delete this post?"
+        );
+
+        if (!confirmed) {
+            return;
+        }
+
+        try {
+            const response = await fetch(
+                `${API_URL}/api/posts/${post._id}`,
+                {
+                    method: "DELETE"
+                }
+            );
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(
+                    data.message ||
+                    "Unable to delete post."
+                );
+            }
+
+            navigate("/home");
+
+        } catch (error) {
+            setMessage(error.message);
+        }
     }
 
     return (
         <section className="edit-post">
+
             <h2>Edit Artwork</h2>
 
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleUpdate}>
+
                 <label htmlFor="edit-description">
                     Description
                 </label>
@@ -36,7 +114,6 @@ function EditPost({ post }) {
                     onChange={(event) =>
                         setDescription(event.target.value)
                     }
-                    required
                 />
 
                 <label htmlFor="edit-hashtags">
@@ -45,20 +122,28 @@ function EditPost({ post }) {
 
                 <input
                     id="edit-hashtags"
+                    type="text"
                     value={hashtags}
                     onChange={(event) =>
                         setHashtags(event.target.value)
                     }
                 />
 
-                <p>
-                    The artwork image cannot be changed.
-                </p>
-
                 <button type="submit">
-                    Save Artwork
+                    Save Changes
                 </button>
+
             </form>
+
+            <button
+                type="button"
+                onClick={handleDelete}
+            >
+                Delete Artwork
+            </button>
+
+            {message && <p>{message}</p>}
+
         </section>
     );
 }

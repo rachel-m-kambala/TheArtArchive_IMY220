@@ -1,3 +1,4 @@
+//Rachel Kambala u23559129
 const express = require("express");
 
 const {
@@ -10,18 +11,22 @@ const {
 
 const router = express.Router();
 
+//ALL POSTS
 router.get("/", async (req, res) => {
     try {
         const posts = await getAllPosts();
 
-        res.json(posts);
+        res.status(200).json(posts);
     } catch (error) {
+        console.error(error);
+
         res.status(500).json({
             message: "Unable to retrieve posts."
         });
     }
 });
 
+//ONE POST
 router.get("/:id", async (req, res) => {
     try {
         const post = await getPostById(req.params.id);
@@ -32,59 +37,76 @@ router.get("/:id", async (req, res) => {
             });
         }
 
-        res.json(post);
+        res.status(200).json(post);
+
     } catch (error) {
+        console.error(error);
+
         res.status(400).json({
             message: "Invalid post ID."
         });
     }
 });
 
+//CREATE POST
 router.post("/", async (req, res) => {
     try {
         const {
             userId,
+            artist,
+            artistName,
             title,
             description,
             image,
-            hashtags,
-            category
+            hashtags
         } = req.body;
 
-        if (!userId || !title || !description || !image) {
+        if (
+            !userId ||
+            !title ||
+            !description ||
+            !image
+        ) {
             return res.status(400).json({
-                message: "Required post information is missing."
+                message:
+                    "User, title, description and image are required."
             });
         }
 
         const post = await createPost({
             userId,
+            artist,
+            artistName,
             title,
             description,
             image,
-            hashtags: hashtags || [],
-            category: category || [],
-            likes: []
+            hashtags: hashtags || []
         });
 
         res.status(201).json(post);
+
     } catch (error) {
+        console.error(error);
+
         res.status(500).json({
             message: "Unable to create post."
         });
     }
 });
 
+//UPDATE POST
 router.put("/:id", async (req, res) => {
     try {
-        const { description, hashtags, category } = req.body;
+        const {
+            description,
+            hashtags
+        } = req.body;
 
         const post = await updatePost(
             req.params.id,
             {
                 description,
-                hashtags,
-                category
+                hashtags
             }
         );
 
@@ -94,14 +116,18 @@ router.put("/:id", async (req, res) => {
             });
         }
 
-        res.json(post);
+        res.status(200).json(post);
+
     } catch (error) {
+        console.error(error);
+
         res.status(400).json({
             message: "Unable to update post."
         });
     }
 });
 
+//DELETE POST
 router.delete("/:id", async (req, res) => {
     try {
         const result = await deletePost(req.params.id);
@@ -112,10 +138,13 @@ router.delete("/:id", async (req, res) => {
             });
         }
 
-        res.json({
+        res.status(200).json({
             message: "Post deleted successfully."
         });
+
     } catch (error) {
+        console.error(error);
+
         res.status(400).json({
             message: "Unable to delete post."
         });

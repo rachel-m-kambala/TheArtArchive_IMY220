@@ -1,47 +1,51 @@
-import React from "react";
+//Rachel Kambala u23559129
+import React, { useState } from "react";
+
 import Header from "../components/Header.jsx";
-import Profile from "../components/Profile.jsx";
-import EditProfile from "../components/EditProfile.jsx";
-import UserPosts from "../components/UserPosts.jsx";
-import Friends from "../components/Friends.jsx";
 import CreatePost from "../components/CreatePost.jsx";
-import users from "../data/users.js";
-import posts from "../data/posts.js";
 
 function Studio() {
-    const currentUser = users[0];
+    const [posts, setPosts] = useState([]);
 
-    const userPosts = posts.filter(
-        (post) => post.artist === currentUser.username
+    const currentUser = JSON.parse(
+        localStorage.getItem("currentUser")
     );
 
-    const friends = users.filter((user) =>
-        currentUser.friends.includes(user.id)
-    );
+    function handlePostCreated(newPost) {
+        setPosts((previousPosts) => [
+            newPost,
+            ...previousPosts
+        ]);
+    }
+
+    if (!currentUser) {
+        return (
+            <>
+                <Header />
+
+                <main className="page">
+                    <h1>Studio</h1>
+
+                    <p>
+                        Please log in to add artwork.
+                    </p>
+                </main>
+            </>
+        );
+    }
 
     return (
         <>
             <Header />
 
             <main className="page">
-                <Profile
-                    user={currentUser}
-                    isOwnProfile={true}
+                <h1>Portfolio</h1>
+
+                <CreatePost
+                    currentUser={currentUser}
+                    onPostCreated={handlePostCreated}
                 />
 
-                <div className="studio-layout">
-                    <section>
-                        <UserPosts posts={userPosts} />
-
-                        <CreatePost />
-                    </section>
-
-                    <aside>
-                        <Friends friends={friends} />
-
-                        <EditProfile user={currentUser} />
-                    </aside>
-                </div>
             </main>
         </>
     );

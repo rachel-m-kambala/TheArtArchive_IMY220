@@ -1,10 +1,12 @@
-import React from "react";
-import { useParams, Link } from "react-router-dom";
+//Rachel Kambala u23559129
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 import Header from "../components/Header.jsx";
-import Post from "../components/Post.jsx";
-import Comments from "../components/Comments.jsx";
 import EditPost from "../components/EditPost.jsx";
+
+const API_URL =
+    import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 function PostPage() {
     const { id } = useParams();
@@ -13,25 +15,29 @@ function PostPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
-     useEffect(() => {
+    const currentUser = JSON.parse(
+        localStorage.getItem("currentUser")
+    );
+
+    useEffect(() => {
         async function loadPost() {
             try {
                 const response = await fetch(
-                    `/api/posts/${id}`
+                    `${API_URL}/api/posts/${id}`
                 );
+
+                const data = await response.json();
 
                 if (!response.ok) {
                     throw new Error(
+                        data.message ||
                         "Unable to retrieve post."
                     );
                 }
 
-                const data = await response.json();
-
                 setPost(data);
 
             } catch (error) {
-                console.error(error);
                 setError(error.message);
 
             } finally {
@@ -40,40 +46,70 @@ function PostPage() {
         }
 
         loadPost();
+
     }, [id]);
 
     if (loading) {
-        return (
-            <>
-                <Header />
-                <main className="page">
-                    <p>Loading artwork...</p>
-                </main>
-            </>
-        );
+        return <p>Loading post...</p>;
     }
 
     if (error) {
-        return (
-            <>
-                <Header />
-                <main className="page">
-                    <p className="form-error">
-                        {error}
-                    </p>
-                </main>
-            </>
-        );
+        return <p>{error}</p>;
     }
+
+    if (!post) {
+        return <p>Post not found.</p>;
+    }
+
+    const isCreator =
+        currentUser &&
+        String(currentUser._id) === String(post.userId);
 
     return (
         <>
             <Header />
 
             <main className="page">
-                <Post post={post} />
 
-                <Comments postId={id} />
+                <article className="single-post">
+
+                    <figure className="post-image-container">
+                        <img
+                            className="post-image"
+                            src={post.image}
+                            alt={post.title}
+                        />
+                    </figure>
+
+                    <section className="single-post-information">
+
+                        <h1>{post.title}</h1>
+
+                        <p>
+                            By {post.artistName}
+                        </p>
+
+                        <p>{post.description}</p>
+
+                        <div className="hashtags">
+                            {post.hashtags?.map((tag) => (
+                                <span key={tag}>
+                                    {tag}
+                                </span>
+                            ))}
+                        </div>
+
+                    </section>
+
+                </article>
+
+                {isCreator && (
+                    <EditPost
+                        post={post}
+                        setPost={setPost}
+                    />
+                )}
+
             </main>
         </>
     );

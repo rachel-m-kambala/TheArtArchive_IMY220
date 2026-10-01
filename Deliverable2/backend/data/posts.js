@@ -1,4 +1,4 @@
-//{} ""
+//Rachel Kambala u23559129
 const { ObjectId } = require("mongodb");
 const { getDB } = require("../database.js");
 
@@ -7,39 +7,52 @@ function getPostsCollection(){
 }
 
 async function getAllPosts(){
-    return await getPostsCollection()
-        .find()
+    const db = getDB();
+    return await db.collection("posts")
+        .find({})
         .sort({ createdAT: -1})
         .toArray();
 }
 
 async function getPostById(id){
-    return await getPostsCollection().findOne({
+    const db = getDB();
+
+    return await db.collection("posts").findOne({
         _id: new ObjectId(id)
     });
 }
 
-async function createPost(post){
+async function createPost(postData) {
+    const db = getDB();
+
     const newPost = {
-        ...post,
+        ...postData,
+        hashtags: postData.hashtags || [],
+        comments: [],
+        appreciates: [],
+        reported: false,
         createdAt: new Date()
     };
 
-    const result = await getPostsCollection().insertOne(newPost);
+    const result = await db
+        .collection("posts")
+        .insertOne(newPost);
 
-    return{
-        _id: result.insertId,
-        ...newPost
+    return {
+        ...newPost,
+        _id: result.insertedId
     };
 }
 
-async function updatePost(id, changes){
-    const result = await getPostsCollection().findOneAndUpdate(
+async function updatePost(id, updateData) {
+    const db = getDB();
+
+    const result = await db.collection("posts").findOneAndUpdate(
         {
             _id: new ObjectId(id)
         },
         {
-            $set: changes
+            $set: updateData
         },
         {
             returnDocument: "after"
@@ -49,8 +62,10 @@ async function updatePost(id, changes){
     return result;
 }
 
-async function deletePost(id){
-    return await getPostsCollection().deleteOne({
+async function deletePost(id) {
+    const db = getDB();
+
+    return await db.collection("posts").deleteOne({
         _id: new ObjectId(id)
     });
 }

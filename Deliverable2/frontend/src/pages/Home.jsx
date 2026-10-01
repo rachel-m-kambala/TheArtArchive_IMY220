@@ -1,24 +1,38 @@
+//Rachel Kambala u23559129
 import React, { useEffect, useState } from "react";
+
 import Header from "../components/Header.jsx";
 import SearchInput from "../components/SearchInput.jsx";
 import Feed from "../components/Feed.jsx";
 
+const API_URL =
+    import.meta.env.VITE_API_URL || "http://localhost:5000";
+
 function Home() {
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState([""]);
+    const [error, setError] = useState("");
 
     useEffect(() => {
-        async function loadPosts(){
-            try{
-                const response = await fetch("/api/posts");
-                if(!response.ok){
-                    throw new Error("Failed to fetch posts.");
+        async function loadPosts() {
+            try {
+                const response = await fetch(
+                    `${API_URL}/api/posts`
+                );
+
+                if (!response.ok) {
+                    throw new Error(
+                        "Unable to retrieve posts."
+                    );
                 }
+
                 const data = await response.json();
+
                 setPosts(data);
+
             } catch (error) {
-                setError([error.message]);
+                setError(error.message);
+
             } finally {
                 setLoading(false);
             }
@@ -26,57 +40,45 @@ function Home() {
 
         loadPosts();
     }, []);
-    
-    if(loading){
-        return(
-            <>
-                <Header />
-                <main className="page">
-                    <p>Loading gallery...</p>
-                </main>
-            </>
-        );
-    }
 
-     if(error){
-        return(
-            <>
-                <Header />
-                <main className="page">
-                    <p>Error loading gallery: {error}</p>
-                </main>
-            </>
-        );
-    }
-     return (
-         <>
-             <Header />
+    return (
+        <>
+            <Header />
 
-             <main className="page">
-                 <section className="page-heading">
-                     <p className="eyebrow">
-                         THE ART ARCHIVE
-                     </p>
+            <main className="page">
 
-                     <h1>Gallery</h1>
+                <section className="page-heading">
+                    <p className="eyebrow">
+                        THE ART ARCHIVE
+                    </p>
 
-                     <p>
-                         Explore the latest activity from your
-                         creative community.
-                     </p>
-                 </section>
+                    <h1>Gallery</h1>
 
-                 <SearchInput />
+                    <p>
+                        Explore the latest activity from
+                        your creative community.
+                    </p>
+                </section>
 
-                <Feed
-                    posts={localPosts}
-                    title="Local Gallery"
-                />
+                <SearchInput />
 
-                <Feed
-                    posts={posts}
-                    title="Global Showcase"
-                />
+                {loading && (
+                    <p>Loading artwork...</p>
+                )}
+
+                {error && (
+                    <p className="form-error">
+                        {error}
+                    </p>
+                )}
+
+                {!loading && !error && (
+                    <Feed
+                        posts={posts}
+                        title="Global Showcase"
+                    />
+                )}
+
             </main>
         </>
     );
