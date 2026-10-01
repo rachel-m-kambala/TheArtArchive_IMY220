@@ -1,3 +1,4 @@
+//Rachel Kambala u23559129
 const express = require("express");
 
 const {
@@ -6,21 +7,21 @@ const {
     createAlbum,
     updateAlbum,
     deleteAlbum,
-    getAlbumsByUserId,
     addPostToAlbum,
     removePostFromAlbum
 } = require("../data/albums.js");
 
 const router = express.Router();
 
+//Get All Albums
 router.get("/", async (req, res) => {
     try {
         const albums = await getAllAlbums();
 
-        res.json(albums);
+        res.status(200).json(albums);
 
     } catch (error) {
-        console.error("GET /api/albums error:", error);
+        console.error(error);
 
         res.status(500).json({
             message: "Unable to retrieve albums."
@@ -28,23 +29,7 @@ router.get("/", async (req, res) => {
     }
 });
 
-router.get("/user/:userId", async (req, res) => {
-    try {
-        const albums = await getAlbumsByUserId(
-            req.params.userId
-        );
-
-        res.json(albums);
-
-    } catch (error) {
-        console.error("Get user albums error:", error);
-
-        res.status(400).json({
-            message: "Unable to retrieve user's albums."
-        });
-    }
-});
-
+//Get One Album
 router.get("/:id", async (req, res) => {
     try {
         const album = await getAlbumById(req.params.id);
@@ -55,10 +40,10 @@ router.get("/:id", async (req, res) => {
             });
         }
 
-        res.json(album);
+        res.status(200).json(album);
 
     } catch (error) {
-        console.error("Get album error:", error);
+        console.error(error);
 
         res.status(400).json({
             message: "Invalid album ID."
@@ -66,33 +51,34 @@ router.get("/:id", async (req, res) => {
     }
 });
 
+//Create Album
 router.post("/", async (req, res) => {
     try {
         const {
-            ownerId,
+            userId,
             name,
             description,
             hashtags
         } = req.body;
 
-        if (!ownerId || !name) {
+        if (!userId || !name || !description) {
             return res.status(400).json({
                 message:
-                    "Album owner and name are required."
+                    "User, album name and description are required."
             });
         }
 
         const album = await createAlbum({
-            ownerId,
+            userId,
             name,
-            description: description || "",
+            description,
             hashtags: hashtags || []
         });
 
         res.status(201).json(album);
 
     } catch (error) {
-        console.error("Create album error:", error);
+        console.error(error);
 
         res.status(500).json({
             message: "Unable to create album."
@@ -100,6 +86,7 @@ router.post("/", async (req, res) => {
     }
 });
 
+//Update Album
 router.put("/:id", async (req, res) => {
     try {
         const {
@@ -123,10 +110,10 @@ router.put("/:id", async (req, res) => {
             });
         }
 
-        res.json(album);
+        res.status(200).json(album);
 
     } catch (error) {
-        console.error("Update album error:", error);
+        console.error(error);
 
         res.status(400).json({
             message: "Unable to update album."
@@ -134,34 +121,20 @@ router.put("/:id", async (req, res) => {
     }
 });
 
-router.delete("/:id", async (req, res) => {
+//Add Post To Album
+router.put("/:id/posts", async (req, res) => {
     try {
-        const result = await deleteAlbum(req.params.id);
+        const { postId } = req.body;
 
-        if (result.deletedCount === 0) {
-            return res.status(404).json({
-                message: "Album not found."
+        if (!postId) {
+            return res.status(400).json({
+                message: "Post ID is required."
             });
         }
 
-        res.json({
-            message: "Album deleted successfully."
-        });
-
-    } catch (error) {
-        console.error("Delete album error:", error);
-
-        res.status(400).json({
-            message: "Unable to delete album."
-        });
-    }
-});
-
-router.put("/:id/posts/:postId", async (req, res) => {
-    try {
         const album = await addPostToAlbum(
             req.params.id,
-            req.params.postId
+            postId
         );
 
         if (!album) {
@@ -170,10 +143,10 @@ router.put("/:id/posts/:postId", async (req, res) => {
             });
         }
 
-        res.json(album);
+        res.status(200).json(album);
 
     } catch (error) {
-        console.error("Add post to album error:", error);
+        console.error(error);
 
         res.status(400).json({
             message: "Unable to add post to album."
@@ -181,6 +154,7 @@ router.put("/:id/posts/:postId", async (req, res) => {
     }
 });
 
+//Remove Post From Album
 router.delete("/:id/posts/:postId", async (req, res) => {
     try {
         const album = await removePostFromAlbum(
@@ -194,13 +168,37 @@ router.delete("/:id/posts/:postId", async (req, res) => {
             });
         }
 
-        res.json(album);
+        res.status(200).json(album);
 
     } catch (error) {
-        console.error("Remove post from album error:", error);
+        console.error(error);
 
         res.status(400).json({
             message: "Unable to remove post from album."
+        });
+    }
+});
+
+//Delete Album
+router.delete("/:id", async (req, res) => {
+    try {
+        const result = await deleteAlbum(req.params.id);
+
+        if (result.deletedCount === 0) {
+            return res.status(404).json({
+                message: "Album not found."
+            });
+        }
+
+        res.status(200).json({
+            message: "Album deleted successfully."
+        });
+
+    } catch (error) {
+        console.error(error);
+
+        res.status(400).json({
+            message: "Unable to delete album."
         });
     }
 });

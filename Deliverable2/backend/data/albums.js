@@ -1,70 +1,97 @@
+//Rachel Kambala u23559129
 const { ObjectId } = require("mongodb");
 const { getDB } = require("../database.js");
 
-function getAlbumsCollection() {
-    return getDB().collection("albums");
-}
-
+//ALL ALBUMS
 async function getAllAlbums() {
-    return await getAlbumsCollection()
+    const db = getDB();
+
+    return await db
+        .collection("albums")
         .find({})
         .sort({ createdAt: -1 })
         .toArray();
 }
 
+//ONE ALBUM
 async function getAlbumById(id) {
-    return await getAlbumsCollection().findOne({
+    const db = getDB();
+
+    return await db.collection("albums").findOne({
         _id: new ObjectId(id)
     });
 }
 
-async function getAlbumsByUserId(userId) {
-    return await getAlbumsCollection()
-        .find({
-            ownerId: new ObjectId(userId)
-        })
-        .sort({ createdAt: -1 })
-        .toArray();
-}
-
+//CREATE ALBUM
 async function createAlbum(albumData) {
+    const db = getDB();
+
     const newAlbum = {
-        ownerId: new ObjectId(albumData.ownerId),
+        userId: albumData.userId,
         name: albumData.name,
-        description: albumData.description || "",
+        description: albumData.description,
         hashtags: albumData.hashtags || [],
         posts: [],
         createdAt: new Date()
     };
 
-    const result = await getAlbumsCollection().insertOne(
-        newAlbum
-    );
+    const result = await db
+        .collection("albums")
+        .insertOne(newAlbum);
 
     return {
-        _id: result.insertedId,
-        ...newAlbum
+        ...newAlbum,
+        _id: result.insertedId
     };
 }
 
-async function updateAlbum(id, albumData) {
-    return await getAlbumsCollection().findOneAndUpdate(
-        {
-            _id: new ObjectId(id)
-        },
-        {
-            $set: albumData
-        },
-        {
-            returnDocument: "after"
-        }
-    );
+//UPDATE ALBUM
+async function updateAlbum(id, updateData) {
+    const db = getDB();
+
+    return await db
+        .collection("albums")
+        .findOneAndUpdate(
+            {
+                _id: new ObjectId(id)
+            },
+            {
+                $set: updateData
+            },
+            {
+                returnDocument: "after"
+            }
+        );
 }
 
+//DELETE ALBUM
 async function deleteAlbum(id) {
-    return await getAlbumsCollection().deleteOne({
+    const db = getDB();
+
+    return await db.collection("albums").deleteOne({
         _id: new ObjectId(id)
     });
+}
+
+//ADD POST TO ALBUM
+async function addPostToAlbum(albumId, postId) {
+    const db = getDB();
+
+    return await db
+        .collection("albums")
+        .findOneAndUpdate(
+            {
+                _id: new ObjectId(albumId)
+            },
+            {
+                $addToSet: {
+                    posts: postId
+                }
+            },
+            {
+                returnDocument: "after"
+            }
+        );
 }
 
 async function addPostToAlbum(albumId, postId) {
@@ -83,26 +110,30 @@ async function addPostToAlbum(albumId, postId) {
     );
 }
 
+//REMOVE POST FROM ALBUM
 async function removePostFromAlbum(albumId, postId) {
-    return await getAlbumsCollection().findOneAndUpdate(
-        {
-            _id: new ObjectId(albumId)
-        },
-        {
-            $pull: {
-                posts: new ObjectId(postId)
+    const db = getDB();
+
+    return await db
+        .collection("albums")
+        .findOneAndUpdate(
+            {
+                _id: new ObjectId(albumId)
+            },
+            {
+                $pull: {
+                    posts: postId
+                }
+            },
+            {
+                returnDocument: "after"
             }
-        },
-        {
-            returnDocument: "after"
-        }
-    );
+        );
 }
 
 module.exports = {
     getAllAlbums,
     getAlbumById,
-    getAlbumsByUserId,
     createAlbum,
     updateAlbum,
     deleteAlbum,

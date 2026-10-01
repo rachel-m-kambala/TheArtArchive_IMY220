@@ -12,6 +12,7 @@ import ProfilePage from "./pages/ProfilePage.jsx";
 import PostPage from "./pages/PostPage.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import SignupPage from "./pages/SignupPage.jsx";
+import AlbumPage from "./pages/AlbumPage.jsx";
 
 function App() {
     return (
@@ -29,6 +30,7 @@ function App() {
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/signup" element={<SignupPage />} />
                 <Route path="*" element={<Navigate to="/" replace />}/>
+                <Route path="/album/:id" element={<AlbumPage />} />
             </Routes>
         </BrowserRouter>
     );

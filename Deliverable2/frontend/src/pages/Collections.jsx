@@ -1,69 +1,137 @@
-import React from "react";
+//Rachel Kambala u23559129
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+
 import Header from "../components/Header.jsx";
-import PostPreview from "../components/PostPreview.jsx";
-import posts from "../data/posts.js";
+import CreateAlbum from "../components/CreateAlbum.jsx";
+
+const API_URL =
+    import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 function Collections() {
-    const collections = [
-        {
-            name: "Mindscape Unbound",
-            description:
-                "Digital artwork inspired by imagination and dreams.",
-            posts: posts.filter((post) =>
-                post.albums.includes("Worlds of Imagination")
-            )
-        },
-        {
-            name: "Golden Hour",
-            description:
-                "Illustration inspired by the natural world.",
-            posts: posts.filter((post) =>
-                post.albums.includes("Paintings")
-            )
-        },
-        {
-            name: "City Twilight Reverie",
-            description:
-                "Visual stories from cities around the world.",
-            posts: posts.filter((post) =>
-                post.albums.includes("Cityscapes")
-            )
+    const [albums, setAlbums] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
+
+    const currentUser = JSON.parse(
+        localStorage.getItem("currentUser")
+    );
+
+    useEffect(() => {
+        async function loadAlbums() {
+            try {
+                const response = await fetch(
+                    `${API_URL}/api/albums`
+                );
+
+                if (!response.ok) {
+                    throw new Error(
+                        "Unable to retrieve albums."
+                    );
+                }
+
+                const data = await response.json();
+
+                setAlbums(data);
+
+            } catch (error) {
+                setError(error.message);
+
+            } finally {
+                setLoading(false);
+            }
         }
-    ];
+
+        loadAlbums();
+    }, []);
+
+    function handleAlbumCreated(newAlbum) {
+        setAlbums((previousAlbums) => [
+            newAlbum,
+            ...previousAlbums
+        ]);
+    }
 
     return (
         <>
             <Header />
 
             <main className="page">
+
                 <section className="page-heading">
+                    <p className="eyebrow">
+                        THE ART ARCHIVE
+                    </p>
+
                     <h1>Collections</h1>
 
                     <p>
-                        Browse artwork grouped into creative
-                        collections.
+                        Explore curated collections of
+                        artwork from the community.
                     </p>
                 </section>
 
-                {collections.map((collection) => (
-                    <section
-                        className="collection"
-                        key={collection.name}
-                    >
-                        <h2>{collection.name}</h2>
+                {currentUser && (
+                    <CreateAlbum
+                        currentUser={currentUser}
+                        onAlbumCreated={
+                            handleAlbumCreated
+                        }
+                    />
+                )}
 
-                        <p>{collection.description}</p>
+                {loading && (
+                    <p>Loading albums...</p>
+                )}
 
-                        <div className="post-grid">
-                            {collection.posts.map((post) => (
-                                <PostPreview
-                                    key={post.id}
-                                    post={post}
-                                />
-                            ))}
-                        </div>
-                    </section>
-                ))}
+                {error && (
+                    <p className="form-error">
+                        {error}
+                    </p>
+                )}
+
+                <section className="album-grid">
+
+                    {albums.map((album) => (
+                        <article
+                            className="album-card"
+                            key={album._id}
+                        >
+
+                            <h2>{album.name}</h2>
+
+                            <p>
+                                {album.description}
+                            </p>
+
+                            <div className="hashtags">
+
+                                {album.hashtags?.map(
+                                    (tag) => (
+                                        <span key={tag}>
+                                            {tag}
+                                        </span>
+                                    )
+                                )}
+
+                            </div>
+
+                            <p>
+                                {album.posts?.length || 0}
+                                {" "}artworks
+                            </p>
+
+                            <Link
+                                to={`/album/${album._id}`}
+                            >
+                                View Collection
+                            </Link>
+
+                        </article>
+                    ))}
+
+                </section>
+
             </main>
         </>
     );
