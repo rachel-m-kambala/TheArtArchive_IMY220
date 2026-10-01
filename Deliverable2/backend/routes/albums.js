@@ -20,7 +20,7 @@ router.get("/", async (req, res) => {
         res.json(albums);
 
     } catch (error) {
-        console.error("Get albums error:", error);
+        console.error("GET /api/albums error:", error);
 
         res.status(500).json({
             message: "Unable to retrieve albums."
