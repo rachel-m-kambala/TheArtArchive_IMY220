@@ -1,38 +1,72 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../components/Header.jsx";
 import SearchInput from "../components/SearchInput.jsx";
 import Feed from "../components/Feed.jsx";
-import posts from "../data/posts.js";
 
 function Home() {
-    const currentUser = "artsy5";
+    const [posts, setPosts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState([""]);
 
-    const localPosts = posts.filter(
-        (post) =>
-            post.artist === currentUser ||
-            post.artist === "lunavance" ||
-            post.artist === "oliverthorne"
-    );
+    useEffect(() => {
+        async function loadPosts(){
+            try{
+                const response = await fetch("/api/posts");
+                if(!response.ok){
+                    throw new Error("Failed to fetch posts.");
+                }
+                const data = await response.json();
+                setPosts(data);
+            } catch (error) {
+                setError([error.message]);
+            } finally {
+                setLoading(false);
+            }
+        }
 
-    return (
-        <>
-            <Header />
+        loadPosts();
+    }, []);
+    
+    if(loading){
+        return(
+            <>
+                <Header />
+                <main className="page">
+                    <p>Loading gallery...</p>
+                </main>
+            </>
+        );
+    }
 
-            <main className="page">
-                <section className="page-heading">
-                    <p className="eyebrow">
-                        THE ART ARCHIVE
-                    </p>
+     if(error){
+        return(
+            <>
+                <Header />
+                <main className="page">
+                    <p>Error loading gallery: {error}</p>
+                </main>
+            </>
+        );
+    }
+     return (
+         <>
+             <Header />
 
-                    <h1>Gallery</h1>
+             <main className="page">
+                 <section className="page-heading">
+                     <p className="eyebrow">
+                         THE ART ARCHIVE
+                     </p>
 
-                    <p>
-                        Explore the latest activity from your
-                        creative community.
-                    </p>
-                </section>
+                     <h1>Gallery</h1>
 
-                <SearchInput />
+                     <p>
+                         Explore the latest activity from your
+                         creative community.
+                     </p>
+                 </section>
+
+                 <SearchInput />
 
                 <Feed
                     posts={localPosts}

@@ -8,53 +8,88 @@ function getUsersCollection(){
 
 async function getAllUsers(){
     return await getUsersCollection()
-        .find()
+        .find({})
         .toArray();
 }
 
 async function getUserById(id){
-    return await getUsersCollection().findOne({
-        _id: new ObjectId(id)
-    });
-}
+    const database = getDB();
 
-async function createUser(userData){
-    const newUser = {
-        ...userData,
-        createdAt: new Date()
-    };
-
-    const result = await getUsersCollection().insertOne(newUser);
-
-    return{
-        _id: result.insertId,
-        ...newUser
-    };
-}
-
-async function updateUser(id, userData){
-    const result = await getUsersCollection().findOneAndUpdate(
-        {
+    return await database
+        .collection("users")
+        .findOne({
             _id: new ObjectId(id)
-        },
-        {
-            $set: userData
-        },
-        {
-            returnDocument: "after"
-        }
-    );
+        });
 }
 
-async function deleteUser(id){
-    return await getUsersCollection().deleteOne({
-        _id: new ObjectId(id)
-    });
+async function getUserByEmail(email) {
+    const database = getDB();
+
+    return await database
+        .collection("users")
+        .findOne({
+            email: email.toLowerCase()
+        });
+}
+
+async function getUserByUsername(username) {
+    const database = getDB();
+
+    return await database
+        .collection("users")
+        .findOne({
+            username: username
+        });
+}
+
+async function createUser(user) {
+    const database = getDB();
+
+    const result = await database
+        .collection("users")
+        .insertOne(user);
+
+    return {
+        _id: result.insertedId,
+        ...user
+    };
+}
+
+async function updateUser(id, changes) {
+    const database = getDB();
+
+    const result = await database
+        .collection("users")
+        .findOneAndUpdate(
+            {
+                _id: new ObjectId(id)
+            },
+            {
+                $set: changes
+            },
+            {
+                returnDocument: "after"
+            }
+        );
+
+    return result;
+}
+
+async function deleteUser(id) {
+    const database = getDB();
+
+    return await database
+        .collection("users")
+        .deleteOne({
+            _id: new ObjectId(id)
+        });
 }
 
 module.exports = {
     getAllUsers,
     getUserById,
+    getUserByEmail,
+    getUserByUsername,
     createUser,
     updateUser,
     deleteUser

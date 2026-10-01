@@ -1,19 +1,85 @@
-import React from "react";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 function Comments({ comments }) {
-    const [newComment, setNewComment] = useState("");
+    const [comments, setComments] = useState([]);
+    const [text, setText] = useState("");
+    const [error, setError] = useState("");
 
-    function handleSubmit(event) {
+    useEffect(() => {
+        async function loadComments() {
+            try {
+                const response = await fetch(
+                    `/api/comments/post/${postId}`
+                );
+
+                if (!response.ok) {
+                    throw new Error(
+                        "Unable to retrieve comments."
+                    );
+                }
+
+                const data = await response.json();
+
+                setComments(data);
+
+            } catch (error) {
+                console.error(error);
+                setError(error.message);
+            }
+        }
+
+        loadComments();
+    }, [postId]);
+
+    async function handleSubmit(event) {
         event.preventDefault();
 
-        if (!newComment.trim()) {
+        if (!text.trim()) {
             return;
         }
 
-        console.log("New comment:", newComment);
+        try {
+            const currentUserId =
+                localStorage.getItem("userId");
 
-        setNewComment("");
+            const response = await fetch(
+                "/api/comments",
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        postId,
+                        userId: currentUserId,
+                        text: text.trim()
+                    })
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error(
+                    "Unable to create comment."
+                );
+            }
+
+            const newComment =
+                await response.json();
+
+            setComments((previous) => [
+                newComment,
+                ...previous
+            ]);
+
+            setText("");
+
+        } catch (error) {
+            console.error(error);
+            setError(error.message);
+        }
     }
 
     return (
@@ -21,15 +87,10 @@ function Comments({ comments }) {
             <h2>Comments</h2>
 
             <form onSubmit={handleSubmit}>
-                <label htmlFor="new-comment">
-                    Add a comment
-                </label>
-
                 <textarea
-                    id="new-comment"
-                    value={newComment}
+                    value={text}
                     onChange={(event) =>
-                        setNewComment(event.target.value)
+                        setText(event.target.value)
                     }
                     placeholder="Share your thoughts..."
                     required
@@ -40,20 +101,24 @@ function Comments({ comments }) {
                 </button>
             </form>
 
-            <div className="comment-list">
-                {comments.map((comment) => (
+            {error && (
+                <p className="form-error">
+                    {error}
+                </p>
+            )}
+
+            {comments.length === 0 ? (
+                <p>No comments yet.</p>
+            ) : (
+                comments.map((comment) => (
                     <article
                         className="comment"
-                        key={comment.id}
+                        key={comment._id}
                     >
-                        <h3>@{comment.username}</h3>
-
                         <p>{comment.text}</p>
-
-                        <small>{comment.date}</small>
                     </article>
-                ))}
-            </div>
+                ))
+            )}
         </section>
     );
 }

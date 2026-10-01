@@ -6,64 +6,74 @@ import Post from "../components/Post.jsx";
 import Comments from "../components/Comments.jsx";
 import EditPost from "../components/EditPost.jsx";
 
-import posts from "../data/posts.js";
-import comments from "../data/comments.js";
-
 function PostPage() {
     const { id } = useParams();
 
-    const post = posts.find(
-        (post) => post.id === Number(id)
-    );
+    const [post, setPost] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
 
-    if (!post) {
+     useEffect(() => {
+        async function loadPost() {
+            try {
+                const response = await fetch(
+                    `/api/posts/${id}`
+                );
+
+                if (!response.ok) {
+                    throw new Error(
+                        "Unable to retrieve post."
+                    );
+                }
+
+                const data = await response.json();
+
+                setPost(data);
+
+            } catch (error) {
+                console.error(error);
+                setError(error.message);
+
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        loadPost();
+    }, [id]);
+
+    if (loading) {
         return (
             <>
                 <Header />
-
                 <main className="page">
-                    <section className="page-heading">
-
-                        <h1>Artwork Not Found</h1>
-
-                        <p>
-                            We could not find artwork with
-                            ID {id}.
-                        </p>
-
-                        <Link to="/home">
-                            Return to Gallery
-                        </Link>
-
-                    </section>
+                    <p>Loading artwork...</p>
                 </main>
             </>
         );
     }
 
-    const isOwner =
-        post.artistId === 1 || post.artistId === 2;
+    if (error) {
+        return (
+            <>
+                <Header />
+                <main className="page">
+                    <p className="form-error">
+                        {error}
+                    </p>
+                </main>
+            </>
+        );
+    }
 
     return (
         <>
             <Header />
 
             <main className="page">
+                <Post post={post} />
 
-                <Post
-                    post={post}
-                />
-
-                <Comments
-                    comments={comments}
-                />
-
-                {isOwner && (
-                    <EditPost
-                        post={post}
-                    />
-                )}
-
+                <Comments postId={id} />
             </main>
         </>
     );

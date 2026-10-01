@@ -40,7 +40,7 @@ function Feed({ posts, title }) {
             <div className="feed-grid">
                 {sortedPosts.map((post) => (
                     <PostPreview
-                        key={post.id}
+                        key={post._id}
                         post={post}
                     />
                 ))}

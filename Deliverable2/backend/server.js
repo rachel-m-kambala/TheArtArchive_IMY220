@@ -28,7 +28,7 @@ app.get("/", (req, res) => {
     });
 });
 
-app.post("/api/auth/signup", (req, res) => {
+/*app.post("/api/auth/signup", (req, res) => {
 
     const {
         username,
@@ -107,7 +107,7 @@ app.use((req, res) => {
     res.status(404).json({
         message: "Route not found."
     });
-});
+});*/
 
 async function startServer(){
     try{
