@@ -1,93 +1,77 @@
 # The Art Archive
 
-The Art Archive is a photo-sharing web application that allows artists to showcase their work, discover new creators, and engage with the creative community.
+The Art Archive is a photo-sharing web application where artists can share their work, discover other creators, manage profiles, create albums, and interact with posts.
 
 ## Features
 
-- Upload artwork
-- Add descriptions and hashtags
-- Local and Global feeds
+- User signup, login and logout
 - User profiles
+- Create, edit and delete posts
+- Local and Global feeds
+- Albums
+- Comments and post reporting
+- Friend interactions
 
 ## Technologies
+
 - React
 - Vite
 - React Router
+- Tailwind CSS
 - Node.js
 - Express
+- MongoDB Atlas
 - Docker
 
 ## Installation
 
-1. Clone the repository:
-   git clone https://github.com/rachel-m-kambala/TheArtArchive_IMY220.git
-   
+Clone the repository:
+
+git clone https://github.com/rachel-m-kambala/TheArtArchive_IMY220.git
+
+Create `backend/.env` and add:
+
+MONGO_URI=mongodb+srv://u23559129_db_user:Purple1sal1festyle@cluster0.udird4d.mongodb.net/?appName=Cluster0
+PORT=5000
+
 ## Running Locally
 
 ### Backend
+cd Deliverable2/backend
+npm install
+npm start
 
-1. Navigate to the backend folder:
-   cd Deliverable1
-   cd backend
-
-2. Install dependencies:
-   npm install
-
-3. Start the backend:
-   npm start
-
-The backend runs on:
-   http://localhost:5000
+Runs on `http://localhost:5000`.
 
 ### Frontend
+cd Deliverable2/frontend
+npm install
+npm run dev
 
-1. Open a new terminal and navigate to the frontend folder:
-   cd Deliverable1
-   cd frontend
-
-2. Install dependencies:
-   npm install
-
-3. Start the frontend:
-   npm run dev
-
-The frontend runs on:
-   http://localhost:5173
+Runs on `http://localhost:5173`.
 
 ## Running with Docker
+Make sure Docker Desktop is running.
 
-The frontend and backend run in separate Docker containers.
+Create the network:
+docker network create artarchive-network
 
-### Backend Container
+### Backend
+cd Deliverable2/backend
+docker build -t artarchive-backend .
+docker run -d --name backend --network artarchive-network --env-file .env -p 5000:5000 artarchive-backend
 
-1. Navigate to the backend folder:
-   cd Deliverable1
-   cd backend
+### Frontend
+cd Deliverable2/frontend
+docker build -t artarchive-frontend .
+docker run -d --name frontend --network artarchive-network -e VITE_API_PROXY_TARGET=http://backend:5000 -p 5173:5173 artarchive-frontend
 
-2. Build the Docker image:
-   docker build -t art-archive-backend .
 
-3. Run the Docker container:
-   docker run -p 5000:5000 art-archive-backend
+Open the application at `http://localhost:5173`.
 
-The backend will be available at:
-   http://localhost:5000
-
-### Frontend Container
-
-1. Open a new terminal and navigate to the frontend folder:
-   cd Deliverable1
-   cd frontend
-
-2. Build the Docker image:
-   docker build -t art-archive-frontend .
-
-3. Run the Docker container:
-   docker run -p 5173:5173 art-archive-frontend
-
-The frontend will be available at:
-   http://localhost:5173
+To stop the containers:
+docker stop frontend backend
 
 ## Author
 
-- Rachel Kambala
+Rachel Kambala
