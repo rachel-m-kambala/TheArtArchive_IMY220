@@ -1,29 +1,29 @@
 //u23559129 Rachel Kambala
 import React from "react";
 import { NavLink, Link, useNavigate } from "react-router-dom";
-
 import logo from "../assets/images/artarticle.png";
 
 export default function Header() {
     const navigate = useNavigate();
 
     const userId = localStorage.getItem("userId");
-
     const username = localStorage.getItem("username");
 
     function handleLogout() {
         localStorage.removeItem("userId");
         localStorage.removeItem("username");
         localStorage.removeItem("email");
+        localStorage.removeItem("currentUser");
+
         navigate("/");
     }
 
     const navClass = ({ isActive }) =>
-            `text-sm uppercase tracking-widest transition ${
-                isActive
-                    ? "text-[#9D2E36]"
-                    : "text-[#253247] hover:text-[#9D2E36]"
-            }`;
+        `text-sm uppercase tracking-widest transition ${
+            isActive
+                ? "text-[#9D2E36]"
+                : "text-[#253247] hover:text-[#9D2E36]"
+        }`;
 
     return (
         <header className="sticky top-0 z-50 flex items-center justify-between border-b border-[#D8D3CA] bg-[#F2F0EB] px-8 py-4">
@@ -66,13 +66,13 @@ export default function Header() {
             </nav>
 
             <div className="flex items-center gap-4">
-                {currentUser ? (
+                {userId ? (
                     <>
                         <Link
-                            to={`/profile/${currentUser._id}`}
+                            to={`/profile/${userId}`}
                             className="text-sm text-[#253247] hover:text-[#9D2E36]"
                         >
-                            {currentUser.username}
+                            {username}
                         </Link>
 
                         <button
