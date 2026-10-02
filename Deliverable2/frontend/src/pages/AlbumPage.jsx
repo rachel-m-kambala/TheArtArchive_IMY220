@@ -25,11 +25,9 @@ function AlbumPage() {
 
         async function loadAlbum() {
             try {
-
                 const albumResponse = await fetch(
                     `${API_URL}/api/albums/${id}`
                 );
-
                 const albumData =
                     await albumResponse.json();
 
@@ -41,8 +39,6 @@ function AlbumPage() {
                 }
 
                 setAlbum(albumData);
-
-
                 const postsResponse = await fetch(
                     `${API_URL}/api/posts`
                 );
@@ -62,23 +58,15 @@ function AlbumPage() {
                             post._id
                         )
                     );
-
                 setPosts(albumPosts);
-
             } catch (error) {
-
                 setError(error.message);
-
             } finally {
-
                 setLoading(false);
             }
         }
-
         loadAlbum();
-
     }, [id]);
-
 
     if (loading) {
         return <p>Loading album...</p>;
@@ -92,21 +80,16 @@ function AlbumPage() {
         return <p>Album not found.</p>;
     }
 
-
     const isOwner =
         currentUser &&
         String(currentUser._id) ===
         String(album.userId);
-
-
     return (
         <>
             <Header />
 
             <main className="page">
-
                 <section className="page-heading">
-
                     <p className="eyebrow">
                         COLLECTION
                     </p>
@@ -141,18 +124,13 @@ function AlbumPage() {
                     />
                 )}
 
-
                 <section className="post-grid">
-
                     {posts.length === 0 ? (
-
                         <p>
                             There are currently no
                             artworks in this album.
                         </p>
-
                     ) : (
-
                         posts.map((post) => (
                             <PostPreview
                                 key={post._id}
@@ -161,9 +139,7 @@ function AlbumPage() {
                         ))
 
                     )}
-
                 </section>
-
             </main>
         </>
     );

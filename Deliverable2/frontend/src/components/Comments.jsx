@@ -147,14 +147,10 @@ function Comments({ postId }) {
     }
 
     return (
-        <section className="comments">
-            <h2>Comments</h2>
+        <section className="mt-16 border-t border-[#D8D3CA] pt-10">
+            <h2 className="mb-8 text-3xl font-semibold text-[#253247]">Comments</h2>
             {currentUser ? (
-                <form
-                    onSubmit={
-                        handleSubmit
-                    }
-                >
+                <form onSubmit={handleSubmit}>
                     <textarea
                         value={text}
                         onChange={
@@ -212,19 +208,16 @@ function Comments({ postId }) {
 
                             return (
                                 <article
-                                    className="comment"
-                                    key={
-                                        comment._id
-                                    }
+                                    className="border-b border-[#D8D3CA] py-5"
+                                    key={comment._id}
                                 >
-
-                                    <strong>
+                                    <strong className="text-sm text-[#9D2E36]">
                                         {
                                             comment.username
                                         }
                                     </strong>
 
-                                    <p>
+                                    <p className="mt-2 leading-6 text-[#253247]">
                                         {
                                             comment.text
                                         }

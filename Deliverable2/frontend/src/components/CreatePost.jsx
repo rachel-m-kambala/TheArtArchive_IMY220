@@ -13,25 +13,19 @@ function CreatePost({ currentUser, onPostCreated }) {
 
     function handleImageChange(event) {
         const file = event.target.files[0];
-
         if (!file) {
             return;
         }
-
         const reader = new FileReader();
-
         reader.onloadend = () => {
             setImage(reader.result);
         };
-
         reader.readAsDataURL(file);
     }
 
     async function handleSubmit(event) {
         event.preventDefault();
-
         setMessage("");
-
         if (
             !title.trim() ||
             !description.trim() ||
@@ -40,7 +34,6 @@ function CreatePost({ currentUser, onPostCreated }) {
             setMessage(
                 "Please add a title, description and image."
             );
-
             return;
         }
 
@@ -103,8 +96,16 @@ function CreatePost({ currentUser, onPostCreated }) {
     }
 
     return (
-        <section className="create-post">
-            <h2>Add Artwork</h2>
+        <section className="my-10 max-w-3xl border border-[#D8D3CA] bg-white p-8">
+            <div className="mb-8">
+                <p className="mb-2 text-xs uppercase tracking-[0.25em] text-[#9D2E36]">
+                    YOUR STUDIO
+                </p>
+
+                <h2 className="text-3xl font-semibold text-[#253247]">
+                    Add Artwork
+                </h2>
+            </div>
 
             <form onSubmit={handleSubmit}>
 

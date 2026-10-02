@@ -5,16 +5,10 @@ import SearchInput from "../components/SearchInput.jsx";
 import Feed from "../components/Feed.jsx";
 
 function Home() {
-    const [posts, setPosts] =
-        useState([]);
-
-    const [feedType, setFeedType] =
-        useState("global");
-
-    const [loading, setLoading] =
-        useState(true);
-    const [error, setError] =
-        useState("");
+    const [posts, setPosts] = useState([]);
+    const [feedType, setFeedType] = useState("global");
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
     const currentUser = JSON.parse(
         localStorage.getItem(
             "currentUser"
@@ -76,21 +70,31 @@ function Home() {
         <>
             <Header />
             <main className="page">
-                <section className="page-heading">
-                    <p className="eyebrow">THE ART ARCHIVE</p>
+                <section className="mb-10">
+                    <p className="mb-2 text-xs uppercase tracking-[0.3em] text-[#9D2E36]">
+                        THE ART ARCHIVE
+                    </p>
 
-                    <h1>Gallery</h1>
+                    <h1 className="mb-3 text-5xl font-semibold text-[#253247]">
+                        Gallery
+                    </h1>
 
-                    <p>Explore activity from artists across the archive.</p>
+                    <p className="max-w-2xl text-base leading-7 text-[#6B6B6B]">
+                        Explore activity from artists across the archive.
+                    </p>
                 </section>
 
                 <SearchInput />
 
-                <div className="feed-toggle">
+                <div className="mb-8 flex gap-2 border-b border-[#D8D3CA]">
                     <button
                         type="button"
                         onClick={showLocalFeed}
-                        className={feedType ==="local"? "active": ""}
+                        className={`px-5 py-3 text-sm uppercase tracking-wider ${
+                            feedType === "local"
+                                ? "border-b-2 border-[#9D2E36] text-[#9D2E36]"
+                                : "text-[#6B6B6B] hover:text-[#253247]"
+                        }`}
                     >
                         Local
                     </button>
@@ -98,7 +102,11 @@ function Home() {
                     <button
                         type="button"
                         onClick={showGlobalFeed}
-                        className={feedType === "global" ? "active" : "" }
+                        className={`px-5 py-3 text-sm uppercase tracking-wider ${
+                            feedType === "global"
+                                ? "border-b-2 border-[#9D2E36] text-[#9D2E36]"
+                                : "text-[#6B6B6B] hover:text-[#253247]"
+                        }`}
                     >
                         Global
                     </button>

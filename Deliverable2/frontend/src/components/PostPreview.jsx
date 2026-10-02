@@ -4,63 +4,37 @@ import { Link } from "react-router-dom";
 
 function PostPreview({ post }) {
     return (
-        <article className="post-preview">
-            <Link to={`/post/${post.id}`}>
-                <img
-                    src={post.image}
-                    alt={post.title}
-                    className="post-preview-image"
-                />
+        <article className="group overflow-hidden bg-white">
+            <Link to={`/post/${post._id}`}>
+                <div className="aspect-[4/3] overflow-hidden bg-[#E8E4DC]">
+                    <img
+                        src={post.image}
+                        alt={post.title}
+                        className="h-full w-full object-cover transition duration-300 group-hover:scale-[1.02]"
+                    />
+                </div>
             </Link>
 
-            <div className="post-preview-content">
-                <div className="post-category">
-                    {post.category}
-                </div>
-
-                <h3>
-                    <Link to={`/post/${post.id}`}>
-                        {post.title}
-                    </Link>
-                </h3>
-
-                <p>
-                    By:{" "}
-                    <Link to={`/profile/${post.artistId}`}>
-                        {post.artist}
-                    </Link>
+            <div className="p-5">
+                <p className="mb-2 text-xs uppercase tracking-widest text-[#9D2E36]">
+                    {post.hashtags?.join(" ")}
                 </p>
 
-                <p className="post-description">
+                <Link to={`/post/${post._id}`}>
+                    <h3 className="mb-2 text-2xl font-semibold text-[#253247] hover:text-[#9D2E36]">
+                        {post.title}
+                    </h3>
+                </Link>
+
+                <p className="mb-3 text-sm text-[#6B6B6B]">
+                    By {post.artistName}
+                </p>
+
+                <p className="leading-6 text-[#253247]">
                     {post.description}
                 </p>
-
-                <div className="hashtags">
-                    {post.hashtags.map((hashtag) => (
-                        <button
-                            key={hashtag}
-                            type="button"
-                            onClick={() =>
-                                console.log("Search:", hashtag)
-                            }
-                        >
-                            {hashtag}
-                        </button>
-                    ))}
-                </div>
-
-                <div className="post-actions">
-                    <button type="button">
-                        Appreciate {post.appreciates}
-                    </button>
-
-                    <Link to={`/post/${post.id}`}>
-                        Comments {post.comments}
-                    </Link>
-                </div>
             </div>
         </article>
     );
 }
-
 export default PostPreview;
