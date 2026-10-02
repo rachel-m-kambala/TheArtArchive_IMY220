@@ -1,12 +1,76 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import SearchInput from "../components/SearchInput";
 import PostPreview from "../components/PostPreview";
 import ProfilePreview from "../components/ProfilePreview";
-import posts from "../data/posts";
-import users from "../data/users";
 
 function Discover() {
+    const [posts, setPosts] = useState([]);
+    const [users, setUsers] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
+
+    useEffect(() => {
+        async function loadDiscoverData() {
+            try {
+                setLoading(true);
+                setError("");
+
+                const postsResponse = await fetch(
+                    "/api/posts"
+                );
+
+                if (!postsResponse.ok) {
+                    throw new Error(
+                        "Failed to retrieve posts."
+                    );
+                }
+
+                const usersResponse = await fetch(
+                    "/api/users"
+                );
+
+                if (!usersResponse.ok) {
+                    throw new Error(
+                        "Failed to retrieve users."
+                    );
+                }
+
+                const postsData =
+                    await postsResponse.json();
+
+                const usersData =
+                    await usersResponse.json();
+
+                console.log(
+                    "Discover posts:",
+                    postsData
+                );
+
+                console.log(
+                    "Discover users:",
+                    usersData
+                );
+
+                setPosts(postsData);
+                setUsers(usersData);
+            } catch (error) {
+                console.error(
+                    "Error loading Discover:",
+                    error
+                );
+
+                setError(
+                    "Unable to load Discover content."
+                );
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        loadDiscoverData();
+    }, []);
+
     return (
         <>
             <Header />
@@ -34,24 +98,59 @@ function Discover() {
                     <button>Character Design</button>
                 </nav>
 
-                <section>
-                    <h2>Featured Artwork</h2>
+                {loading && (
+                    <p>Loading Discover...</p>
+                )}
 
-                    <div className="post-grid">
-                        {posts.map((post) => (
-                            <PostPreview
-                                key={post.id}
-                                post={post}
-                            />
-                        ))}
-                    </div>
-                </section>
+                {error && (
+                    <p>{error}</p>
+                )}
 
-                <section>
-                    <h2>Artist of the Week</h2>
+                {!loading && !error && (
+                    <>
+                        <section>
+                            <h2>
+                                Featured Artwork
+                            </h2>
 
-                    <ProfilePreview user={users[2]} />
-                </section>
+                            {posts.length === 0 ? (
+                                <p>
+                                    No artwork available.
+                                </p>
+                            ) : (
+                                <div className="post-grid">
+                                    {posts.map(
+                                        (post) => (
+                                            <PostPreview
+                                                key={post._id}
+                                                post={post}
+                                            />
+                                        )
+                                    )}
+                                </div>
+                            )}
+                        </section>
+
+                        <section>
+                            <h2>
+                                Artist of the Week
+                            </h2>
+
+                            {users.length > 0 ? (
+                                <ProfilePreview
+                                    user={
+                                        users[2] ||
+                                        users[0]
+                                    }
+                                />
+                            ) : (
+                                <p>
+                                    No artists available.
+                                </p>
+                            )}
+                        </section>
+                    </>
+                )}
             </main>
         </>
     );

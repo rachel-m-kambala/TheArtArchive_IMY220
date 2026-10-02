@@ -1,75 +1,107 @@
-import React from "react";
-import { useParams, Link } from "react-router-dom";
-
+//Rachel Kambala u23559129
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import Header from "../components/Header.jsx";
-import Profile from "../components/Profile.jsx";
 import UserPosts from "../components/UserPosts.jsx";
 import Friends from "../components/Friends.jsx";
-
-import posts from "../data/posts.js";
-import users from "../data/users.js";
 
 function ProfilePage() {
     const { id } = useParams();
 
-    const user = users.find(
-        (user) => user.id === Number(id)
-    );
+    const [user, setUser] = useState(null);
+    const [userPosts, setUserPosts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
 
-    if (!user) {
-        return (
-            <>
-                <Header />
+    useEffect(() => {
+        async function loadProfile() {
+            try {
+                setLoading(true);
+                setError("");
 
-                <main className="page">
-                    <section className="page-heading">
-                        <h1>Profile Not Found</h1>
+                const userResponse = await fetch(
+                    `/api/users/${id}`
+                );
 
-                        <p>
-                            We could not find a profile with
-                            ID {id}.
-                        </p>
+                if (!userResponse.ok) {
+                    throw new Error(
+                        "Failed to retrieve user."
+                    );
+                }
 
-                        <Link to="/home">
-                            Return to Gallery
-                        </Link>
-                    </section>
-                </main>
-            </>
-        );
+                const userData =
+                    await userResponse.json();
+
+                const postsResponse = await fetch(
+                    "/api/posts"
+                );
+
+                if (!postsResponse.ok) {
+                    throw new Error(
+                        "Failed to retrieve posts."
+                    );
+                }
+
+                const postsData =
+                    await postsResponse.json();
+
+                const filteredPosts =
+                    postsData.filter(
+                        (post) =>
+                            String(post.userId) ===
+                            String(id)
+                    );
+
+                setUser(userData);
+                setUserPosts(filteredPosts);
+            } catch (error) {
+                console.error(error);
+                setError(error.message);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        loadProfile();
+    }, [id]);
+
+    if (loading) {
+        return <p>Loading profile...</p>;
     }
 
-    const userPosts = posts.filter(
-        (post) => post.artist === user.username
-    );
+    if (error) {
+        return <p>{error}</p>;
+    }
 
-    const friends = users.filter((friend) =>
-        user.friends.includes(friend.id)
-    );
+    if (!user) {
+        return <p>User not found.</p>;
+    }
 
     return (
         <>
             <Header />
 
-            <main className="page">
+            <main>
+                <h1>{user.name}</h1>
 
-                <Profile
-                    user={user}
-                    isOwnProfile={false}
+                <p>@{user.username}</p>
+
+                {user.profileImage && (
+                    <img
+                        src={user.profileImage}
+                        alt={user.username}
+                    />
+                )}
+
+                <p>{user.bio}</p>
+
+                <UserPosts
+                    posts={userPosts}
                 />
 
-                <section className="profile-content">
-
-                    <UserPosts
-                        posts={userPosts}
-                    />
-
-                    <Friends
-                        friends={friends}
-                    />
-
-                </section>
-
+                <Friends
+                    friends={user.friends || []}
+                />
             </main>
         </>
     );
