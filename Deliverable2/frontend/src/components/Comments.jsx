@@ -1,123 +1,252 @@
+//Rachel Kambala u23559129
 import React, { useEffect, useState } from "react";
 
-function Comments({ comments }) {
+function Comments({ postId }) {
     const [comments, setComments] = useState([]);
     const [text, setText] = useState("");
     const [error, setError] = useState("");
+    const [loading, setLoading] = useState(true);
 
+    const currentUser = JSON.parse(
+        localStorage.getItem(
+            "currentUser"
+        )
+    );
     useEffect(() => {
         async function loadComments() {
             try {
-                const response = await fetch(
-                    `/api/comments/post/${postId}`
-                );
-
+                const response =
+                    await fetch(
+                        `/api/comments/post/${postId}`
+                    );
+                const data =
+                    await response.json();
                 if (!response.ok) {
                     throw new Error(
+                        data.message ||
                         "Unable to retrieve comments."
                     );
                 }
-
-                const data = await response.json();
-
                 setComments(data);
-
             } catch (error) {
-                console.error(error);
-                setError(error.message);
+                setError(
+                    error.message
+                );
+            } finally {
+                setLoading(false);
             }
         }
-
         loadComments();
     }, [postId]);
 
-    async function handleSubmit(event) {
+    async function handleSubmit(
+        event
+    ) {
         event.preventDefault();
-
+        setError("");
+        if (!currentUser) {
+            setError(
+                "Please log in to comment."
+            );
+            return;
+        }
         if (!text.trim()) {
             return;
         }
 
         try {
-            const currentUserId =
-                localStorage.getItem("userId");
+            const response =
+                await fetch(
+                    "/api/comments",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type":
+                                "application/json"
+                        },
+                        body:
+                            JSON.stringify({
+                                postId,
 
-            const response = await fetch(
-                "/api/comments",
-                {
-                    method: "POST",
+                                userId:
+                                    currentUser._id,
 
-                    headers: {
-                        "Content-Type":
-                            "application/json"
-                    },
+                                username:
+                                    currentUser.username,
 
-                    body: JSON.stringify({
-                        postId,
-                        userId: currentUserId,
-                        text: text.trim()
-                    })
-                }
-            );
-
+                                text:
+                                    text.trim()
+                            })
+                    }
+                );
+            const data =
+                await response.json();
             if (!response.ok) {
                 throw new Error(
-                    "Unable to create comment."
+                    data.message ||
+                    "Unable to add comment."
                 );
             }
-
-            const newComment =
-                await response.json();
-
-            setComments((previous) => [
-                newComment,
-                ...previous
-            ]);
-
+            setComments(
+                (previousComments) => [
+                    data,
+                    ...previousComments
+                ]
+            );
             setText("");
-
         } catch (error) {
-            console.error(error);
-            setError(error.message);
+            setError(
+                error.message
+            );
+        }
+    }
+
+    async function handleDelete(
+        commentId
+    ) {
+        const confirmed =
+            window.confirm(
+                "Delete this comment?"
+            );
+        if (!confirmed) {
+            return;
+        }
+        try {
+            const response =
+                await fetch(
+                    `/api/comments/${commentId}`,
+                    {
+                        method:
+                            "DELETE"
+                    }
+                );
+            const data =
+                await response.json();
+            if (!response.ok) {
+
+                throw new Error(
+                    data.message ||
+                    "Unable to delete comment."
+                );
+
+            }
+            setComments(
+                (previousComments) =>
+                    previousComments.filter(
+                        (comment) =>
+                            comment._id !==
+                            commentId
+                    )
+            );
+        } catch (error) {
+
+            setError(
+                error.message
+            );
         }
     }
 
     return (
         <section className="comments">
             <h2>Comments</h2>
-
-            <form onSubmit={handleSubmit}>
-                <textarea
-                    value={text}
-                    onChange={(event) =>
-                        setText(event.target.value)
+            {currentUser ? (
+                <form
+                    onSubmit={
+                        handleSubmit
                     }
-                    placeholder="Share your thoughts..."
-                    required
-                />
+                >
+                    <textarea
+                        value={text}
+                        onChange={
+                            (event) =>
+                                setText(
+                                    event
+                                        .target
+                                        .value
+                                )
+                        }
+                        placeholder=
+                            "Share your thoughts..."
+                    />
+                    <button
+                        type="submit"
+                    >
+                        Comment
+                    </button>
+                </form>
+            ) : (
+                <p>
+                    Log in to join
+                    the conversation.
+                </p>
 
-                <button type="submit">
-                    Comment
-                </button>
-            </form>
-
+            )}
             {error && (
                 <p className="form-error">
                     {error}
                 </p>
             )}
+            {loading ? (
+                <p>
+                    Loading comments...
+                </p>
 
-            {comments.length === 0 ? (
-                <p>No comments yet.</p>
+            ) : comments.length === 0 ? (
+                <p>
+                    No comments yet.
+                    Be the first to comment.
+                </p>
             ) : (
-                comments.map((comment) => (
-                    <article
-                        className="comment"
-                        key={comment._id}
-                    >
-                        <p>{comment.text}</p>
-                    </article>
-                ))
+                <div className="comment-list">
+                    {comments.map(
+                        (comment) => {
+
+                            const isOwner =
+                                currentUser &&
+                                String(
+                                    currentUser._id
+                                ) ===
+                                String(
+                                    comment.userId
+                                );
+
+                            return (
+                                <article
+                                    className="comment"
+                                    key={
+                                        comment._id
+                                    }
+                                >
+
+                                    <strong>
+                                        {
+                                            comment.username
+                                        }
+                                    </strong>
+
+                                    <p>
+                                        {
+                                            comment.text
+                                        }
+                                    </p>
+
+                                    {isOwner && (
+                                        <button
+                                            type="button"
+                                            onClick={() =>
+                                                handleDelete(
+                                                    comment._id
+                                                )
+                                            }
+                                        >
+                                            Delete
+                                        </button>
+                                    )}
+                                </article>
+                            );
+                        }
+                    )}
+                </div>
             )}
         </section>
     );

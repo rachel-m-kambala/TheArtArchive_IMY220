@@ -1,61 +1,102 @@
+//Rachel Kambala u23559129
 const { ObjectId } = require("mongodb");
 const { getDB } = require("../database.js");
 
-function getCommentsCollection(){
+
+function getCommentsCollection() {
     return getDB().collection("comments");
 }
 
-async function getAllComments(){
+//GET COMMENTS FOR POST
+async function getCommentsByPostId(postId) {
+
     return await getCommentsCollection()
-        .find()
-        .sort({ createdAt: -1 })
+        .find({
+            postId
+        })
+        .sort({
+            createdAt: -1
+        })
         .toArray();
 }
 
-async function getCommentById(id){
-    return await getCommentsCollection().findOne({
-        _id: new ObjectId(id)
-    });
-}
+//GET ONE COMMENT
+async function getCommentById(id) {
 
-async function createComment(commentData){
-    const newComment = {
-        ...commentData,
-        createdAt: new Date()
-    };
-
-    const result = await getCommentsCollection().insertOne(newComment);
-
-    return{
-        _id: result.insertId,
-        ...newComment
-    };
-}
-
-async function updateComment(id, commentData){
-    const result = await getCommentsCollection().findOneAndUpdate(
-        {
+    return await getCommentsCollection()
+        .findOne({
             _id: new ObjectId(id)
-        },
-        {
-            $set: commentData
-        },
-        {
-            returnDocument: "after"
-        }
-    );
-
-    return result;
+        });
 }
 
-async function deleteComment(id){
-    return await getCommentsCollection().deleteOne({
-        _id: new ObjectId(id)
-    });
+//CREATE COMMENT
+async function createComment(commentData) {
+
+    const newComment = {
+        postId:
+            commentData.postId,
+
+        userId:
+            commentData.userId,
+
+        username:
+            commentData.username,
+
+        text:
+            commentData.text,
+
+        createdAt:
+            new Date()
+    };
+
+
+    const result =
+        await getCommentsCollection()
+            .insertOne(newComment);
+
+
+    return {
+        ...newComment,
+        _id: result.insertedId
+    };
 }
+
+//UPDATE COMMENT
+async function updateComment(
+    id,
+    text
+) {
+
+    return await getCommentsCollection()
+        .findOneAndUpdate(
+            {
+                _id: new ObjectId(id)
+            },
+
+            {
+                $set: {
+                    text
+                }
+            },
+
+            {
+                returnDocument: "after"
+            }
+        );
+}
+
+//DELETE COMMENT
+async function deleteComment(id) {
+
+    return await getCommentsCollection()
+        .deleteOne({
+            _id: new ObjectId(id)
+        });
+}
+
 
 module.exports = {
-    getAllComments,
+    getCommentsByPostId,
     getCommentById,
     createComment,
     updateComment,

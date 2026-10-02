@@ -4,6 +4,8 @@ import { useParams } from "react-router-dom";
 
 import Header from "../components/Header.jsx";
 import EditPost from "../components/EditPost.jsx";
+import Comments from "../components/Comments.jsx";
+import ReportPost from "../components/ReportPost.jsx";
 
 const API_URL =
     import.meta.env.VITE_API_URL || "http://localhost:5000";
@@ -109,7 +111,15 @@ function PostPage() {
                         setPost={setPost}
                     />
                 )}
+                {!isCreator && (
+                    <ReportPost
+                        postId={post._id}
+                    />
+                )}
 
+                <Comments
+                    postId={post._id}
+                />
             </main>
         </>
     );

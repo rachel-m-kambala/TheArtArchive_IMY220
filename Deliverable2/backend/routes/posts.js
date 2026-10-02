@@ -6,10 +6,57 @@ const {
     getPostById,
     createPost,
     updatePost,
-    deletePost
+    deletePost,
+    getLocalPosts,
+    reportPost
 } = require("../data/posts.js");
 
 const router = express.Router();
+
+//Local Feed
+router.get(
+    "/feed/local/:userId",
+    async (req, res) => {
+
+        try {
+
+            const posts =
+                await getLocalPosts(
+                    req.params.userId
+                );
+
+
+            if (posts === null) {
+
+                return res
+                    .status(404)
+                    .json({
+                        message:
+                            "User not found."
+                    });
+
+            }
+
+
+            res.status(200).json(posts);
+
+
+        } catch (error) {
+
+            console.error(
+                "Local feed error:",
+                error
+            );
+
+
+            res.status(400).json({
+                message:
+                    "Unable to retrieve local feed."
+            });
+
+        }
+    }
+);
 
 //ALL POSTS
 router.get("/", async (req, res) => {
@@ -150,5 +197,71 @@ router.delete("/:id", async (req, res) => {
         });
     }
 });
+
+//REPORT POST
+router.post(
+    "/:id/report",
+    async (req, res) => {
+
+        try {
+
+            const {
+                userId,
+                reason
+            } = req.body;
+
+
+            if (!userId || !reason) {
+
+                return res
+                    .status(400)
+                    .json({
+                        message:
+                            "User and report reason are required."
+                    });
+
+            }
+
+
+            const post =
+                await reportPost(
+                    req.params.id,
+                    userId,
+                    reason
+                );
+
+
+            if (post === "already-reported") {
+
+                return res.status(409).json({
+                    message:
+                        "You have already reported this post."
+                });
+
+            }
+
+
+            res.status(200).json({
+                message:
+                    "Post reported successfully."
+            });
+
+
+        } catch (error) {
+
+            console.error(
+                "Report error:",
+                error
+            );
+
+
+            res.status(400).json({
+                message:
+                    "Unable to report post."
+            });
+
+        }
+    }
+);
 
 module.exports = router;

@@ -20,10 +20,8 @@ function LoginForm() {
     const [isLoading, setIsLoading] =
         useState(false);
 
-
     function validateForm() {
         const newErrors = {};
-
         if (!email.trim()) {
             newErrors.email =
                 "Email address is required.";
@@ -42,7 +40,6 @@ function LoginForm() {
 
         return newErrors;
     }
-
 
     async function handleSubmit(event) {
         event.preventDefault();
@@ -107,14 +104,10 @@ function LoginForm() {
                 "email",
                 data.user.email
             );
-
-
             console.log(
                 "Logged in user:",
                 data.user
             );
-
-
             navigate("/home");
 
         } catch (error) {
@@ -132,8 +125,6 @@ function LoginForm() {
             setIsLoading(false);
         }
     }
-
-
     return (
         <form
             className="login-form"
@@ -141,13 +132,10 @@ function LoginForm() {
             noValidate
         >
             <h2>Enter the Archive</h2>
-
-
             <div className="form-group">
                 <label htmlFor="login-email">
                     Email Address
                 </label>
-
                 <input
                     id="login-email"
                     type="email"
@@ -182,8 +170,6 @@ function LoginForm() {
                     </p>
                 )}
             </div>
-
-
             <div className="form-group">
                 <label
                     htmlFor="login-password"
@@ -225,15 +211,11 @@ function LoginForm() {
                     </p>
                 )}
             </div>
-
-
             {serverError && (
                 <p className="form-error">
                     {serverError}
                 </p>
             )}
-
-
             <button
                 type="submit"
                 disabled={isLoading}
@@ -242,11 +224,8 @@ function LoginForm() {
                     ? "Logging In..."
                     : "Log In"}
             </button>
-
-
             <p>
                 Don't have an account?{" "}
-
                 <Link to="/signup">
                     Become an Artist
                 </Link>
