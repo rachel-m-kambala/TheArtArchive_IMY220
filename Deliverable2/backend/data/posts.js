@@ -11,7 +11,7 @@ async function getAllPosts(){
     const db = getDB();
     return await db.collection("posts")
         .find({})
-        .sort({ createdAT: -1})
+        .sort({ createdAt: -1})
         .toArray();
 }
 
