@@ -76,15 +76,17 @@ function EditAlbum({
 
         event.preventDefault();
 
-        const hashtagArray = hashtags
-            .split(" ")
-            .map((tag) => tag.trim())
-            .filter((tag) => tag !== "")
-            .map((tag) =>
-                tag.startsWith("#")
-                    ? tag
-                    : `#${tag}`
-            );
+        const hashtagArray = [
+            ...new Set(
+                hashtags
+                    .split(/[,\s]+/)
+                    .map((tag) => tag.trim())
+                    .filter((tag) => tag !== "")
+                    .map((tag) =>
+                        tag.startsWith("#") ? tag : `#${tag}`
+                    )
+            )
+        ];
 
         try {
 
@@ -168,25 +170,18 @@ function EditAlbum({
 
             setAlbum(data);
 
-            const addedPost =
-                userPosts.find(
-                    (post) =>
-                        post._id === selectedPost
-                );
+            const addedPost = userPosts.find(
+                (post) => String(post._id) === String(selectedPost)
+            );
 
             if (
                 addedPost &&
                 !posts.some(
-                    (post) =>
-                        post._id === selectedPost
+                    (post) => String(post._id) === String(selectedPost)
                 )
             ) {
-                setPosts((previous) => [
-                    ...previous,
-                    addedPost
-                ]);
+                setPosts((previous) => [...previous, addedPost]);
             }
-
             setSelectedPost("");
 
             setMessage(
@@ -225,8 +220,7 @@ function EditAlbum({
 
             setPosts((previous) =>
                 previous.filter(
-                    (post) =>
-                        post._id !== postId
+                    (post) => String(post._id) !== String(postId)
                 )
             );
 
@@ -355,16 +349,22 @@ function EditAlbum({
                         Select one of your artworks
                     </option>
 
-                    {userPosts.map((post) => (
-
-                        <option
-                            key={post._id}
-                            value={post._id}
-                        >
-                            {post.title}
-                        </option>
-
-                    ))}
+                    {userPosts
+                        .filter(
+                            (post) =>
+                                !(album.posts || []).some(
+                                    (postId) =>
+                                        String(postId) === String(post._id)
+                                )
+                        )
+                        .map((post) => (
+                            <option
+                                key={post._id}
+                                value={post._id}
+                            >
+                                {post.title}
+                            </option>
+                        ))}
 
                 </select>
 

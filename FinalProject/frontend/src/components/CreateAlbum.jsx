@@ -14,6 +14,10 @@ function CreateAlbum({ currentUser, onAlbumCreated }) {
         event.preventDefault();
 
         setMessage("");
+        if (!currentUser?._id) {
+            setMessage("Please log in before creating an album.");
+            return;
+        }
 
         if (!name.trim() || !description.trim()) {
             setMessage(
@@ -23,15 +27,17 @@ function CreateAlbum({ currentUser, onAlbumCreated }) {
             return;
         }
 
-        const hashtagArray = hashtags
-            .split(" ")
-            .map((tag) => tag.trim())
-            .filter((tag) => tag !== "")
-            .map((tag) =>
-                tag.startsWith("#")
-                    ? tag
-                    : `#${tag}`
-            );
+        const hashtagArray = [
+            ...new Set(
+                hashtags
+                    .split(/[,\s]+/)
+                    .map((tag) => tag.trim())
+                    .filter((tag) => tag !== "")
+                    .map((tag) =>
+                        tag.startsWith("#") ? tag : `#${tag}`
+                    )
+            )
+        ];
 
         try {
             const response = await fetch(
@@ -96,6 +102,8 @@ function CreateAlbum({ currentUser, onAlbumCreated }) {
                     onChange={(event) =>
                         setName(event.target.value)
                     }
+                    maxLength={1000}
+                    required
                 />
 
                 <label htmlFor="album-description">

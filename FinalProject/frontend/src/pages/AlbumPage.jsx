@@ -1,6 +1,6 @@
 //Rachel Kambala u23559129
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 
 import Header from "../components/Header.jsx";
 import PostPreview from "../components/PostPreview.jsx";
@@ -52,12 +52,13 @@ function AlbumPage() {
                 const allPosts =
                     await postsResponse.json();
 
-                const albumPosts =
-                    allPosts.filter((post) =>
-                        albumData.posts?.includes(
-                            post._id
-                        )
-                    );
+                const albumPostIds = (albumData.posts || []).map(
+                    (postId) => String(postId)
+                );
+
+                const albumPosts = allPosts.filter((post) =>
+                    albumPostIds.includes(String(post._id))
+                );
                 setPosts(albumPosts);
             } catch (error) {
                 setError(error.message);
@@ -101,17 +102,20 @@ function AlbumPage() {
                     </p>
 
                     <div className="hashtags">
+                        {album.hashtags?.map((tag) => {
+                            const cleanTag = String(tag).replace(/^#/, "");
 
-                        {album.hashtags?.map(
-                            (tag) => (
-                                <span key={tag}>
-                                    {tag}
-                                </span>
-                            )
-                        )}
-
+                            return (
+                                <Link
+                                    key={cleanTag}
+                                    to={`/?search=${encodeURIComponent(cleanTag)}`}
+                                    className="hover:underline"
+                                >
+                                    {tag.startsWith("#") ? tag : `#${tag}`}
+                                </Link>
+                            );
+                        })}
                     </div>
-
                 </section>
 
 
