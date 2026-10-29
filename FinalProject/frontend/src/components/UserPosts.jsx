@@ -1,7 +1,8 @@
+//Rachel Kambala u23559129
 import React from "react";
 import PostPreview from "./PostPreview";
 
-function UserPosts({ posts }) {
+function UserPosts({ posts = [] }) {
     return (
         <section className="user-posts">
             <h2>Portfolio</h2>
@@ -9,7 +10,7 @@ function UserPosts({ posts }) {
             <div className="post-grid">
                 {posts.map((post) => (
                     <PostPreview
-                        key={post.id}
+                        key={post._id || post.id}
                         post={post}
                     />
                 ))}
@@ -17,5 +18,4 @@ function UserPosts({ posts }) {
         </section>
     );
 }
-
 export default UserPosts;

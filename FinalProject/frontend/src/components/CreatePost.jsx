@@ -37,13 +37,19 @@ function CreatePost({ currentUser, onPostCreated }) {
             return;
         }
 
-        const hashtagArray = hashtags
-            .split(" ")
-            .map((tag) => tag.trim())
-            .filter((tag) => tag !== "")
-            .map((tag) =>
-                tag.startsWith("#") ? tag : `#${tag}`
-            );
+        const hashtagArray = [
+            ...new Set(
+                hashtags
+                    .split(/[\s,]+/)
+                    .map((tag) => tag.trim())
+                    .filter(Boolean)
+                    .map((tag) => {
+                        const cleanTag = tag.replace(/^#+/, "");
+                        return cleanTag ? `#${cleanTag}` : "";
+                    })
+                    .filter(Boolean)
+            )
+        ];
 
         const newPost = {
             userId: currentUser._id,

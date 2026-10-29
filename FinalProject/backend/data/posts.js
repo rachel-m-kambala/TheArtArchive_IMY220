@@ -84,10 +84,21 @@ async function updatePost(id, updateData) {
 
 //Delete Post
 async function deletePost(id) {
-   return await getPostsCollection()
-        .deleteOne({
-            _id: new ObjectId(id)
-        });
+    const db = getDB();
+    const postObjectId = new ObjectId(id);
+
+    const post = await db.collection("posts").findOne({
+        _id: postObjectId
+    });
+    if (!post) {
+        return { deletedCount: 0 };
+    }
+    await db.collection("comments").deleteMany({
+        postId: id
+    });
+    return await db.collection("posts").deleteOne({
+        _id: postObjectId
+    });
 }
 
 //LOCAL FEED

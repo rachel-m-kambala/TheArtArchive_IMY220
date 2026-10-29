@@ -17,20 +17,6 @@ function ProfilePreview({ user }) {
             <p className="text-sm text-[#6B6B6B]">@{user.username}</p>
             {user.role && <p className="truncate text-xs text-[#6B6B6B]">{user.role}</p>}
         </div>
-        <div className="mb-2 flex flex-wrap gap-2 text-xs uppercase tracking-widest text-[#9D2E36]">
-            {post.hashtags?.map(tag => (
-                <Link
-                    key={tag}
-                    to={`/?search=${encodeURIComponent(
-                        String(tag).replace(/^#/, "")
-                    )}`}
-                    onClick={event => event.stopPropagation()}
-                    className="hover:underline"
-                >
-                    {tag.startsWith("#") ? tag : `#${tag}`}
-                </Link>
-            ))}
-        </div>
     </article>;
 }
 export default ProfilePreview;
