@@ -26,7 +26,7 @@ export default function Header() {
         }`;
 
     return (
-        <header className="sticky top-0 z-50 flex items-center justify-between border-b border-[#D8D3CA] bg-[#F2F0EB] px-8 py-4">
+        <header className="sticky top-0 z-50 flex items-center justify-between border-b border-[#D8D3CA] bg-[#000000] px-8 py-4">
             <Link to="/home" className="shrink-0">
                 <img
                     src={logo}
