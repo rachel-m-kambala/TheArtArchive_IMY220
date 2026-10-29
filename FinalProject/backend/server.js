@@ -9,6 +9,7 @@ const postRoutes = require("./routes/posts.js");
 const userRoutes = require("./routes/user.js");
 const albumRoutes = require("./routes/albums.js");
 const commentRoutes = require("./routes/comments.js");
+const searchRoutes = require("./routes/search.js");
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use("/api/posts", postRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/albums", albumRoutes);
 app.use("/api/comments", commentRoutes);
+app.use("/api/search", searchRoutes);
 
 app.get("/", (req, res) => {
     res.json({
