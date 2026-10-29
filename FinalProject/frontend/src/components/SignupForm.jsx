@@ -203,18 +203,21 @@ function SignupForm() {
         }
     }
 
-
     return (
         <form
-            className="signup-form"
+            className="signup-form w-full rounded-xl bg-white p-6 text-[#253247] sm:p-10"
             onSubmit={handleSubmit}
             noValidate
         >
-            <h2>Join the Archive</h2>
+            <h2 className="mb-6 text-2xl font-semibold text-[#253247]">
+                Join the Archive
+            </h2>
 
-
-            <div className="form-group">
-                <label htmlFor="username">
+            <div className="mb-5">
+                <label
+                    htmlFor="username"
+                    className="mb-2 block font-medium text-[#253247]"
+                >
                     Username
                 </label>
 
@@ -222,42 +225,36 @@ function SignupForm() {
                     id="username"
                     type="text"
                     value={username}
-
                     onChange={(event) => {
-                        setUsername(
-                            event.target.value
-                        );
-
-                        setErrors(
-                            (previousErrors) => ({
-                                ...previousErrors,
-                                username: ""
-                            })
-                        );
-
+                        setUsername(event.target.value);
+                        setErrors((previousErrors) => ({
+                            ...previousErrors,
+                            username: ""
+                        }));
                         setServerError("");
                     }}
-
                     placeholder="Choose a username"
                     required
-                    minLength="3"
-                    maxLength="20"
-
-                    aria-invalid={
-                        !!errors.username
-                    }
+                    minLength={3}
+                    maxLength={20}
+                    aria-invalid={!!errors.username}
+                    className={`w-full rounded-lg border bg-[#3D485C] px-5 py-4 text-white placeholder:text-[#D1D5DB] outline-none transition focus:ring-2 focus:ring-[#9D2E36] ${
+                        errors.username ? "border-red-600" : "border-[#647084]"
+                    }`}
                 />
 
                 {errors.username && (
-                    <p className="form-error">
+                    <p className="mt-2 text-sm text-red-700">
                         {errors.username}
                     </p>
                 )}
             </div>
 
-
-            <div className="form-group">
-                <label htmlFor="signup-email">
+            <div className="mb-5">
+                <label
+                    htmlFor="signup-email"
+                    className="mb-2 block font-medium text-[#253247]"
+                >
                     Email Address
                 </label>
 
@@ -265,41 +262,33 @@ function SignupForm() {
                     id="signup-email"
                     type="email"
                     value={email}
-
                     onChange={(event) => {
-                        setEmail(
-                            event.target.value
-                        );
-
-                        setErrors(
-                            (previousErrors) => ({
-                                ...previousErrors,
-                                email: ""
-                            })
-                        );
-
+                        setEmail(event.target.value);
+                        setErrors((previousErrors) => ({
+                            ...previousErrors,
+                            email: ""
+                        }));
                         setServerError("");
                     }}
-
                     placeholder="Enter your email"
                     required
-
-                    aria-invalid={
-                        !!errors.email
-                    }
+                    aria-invalid={!!errors.email}
+                    className={`w-full rounded-lg border bg-[#3D485C] px-5 py-4 text-white placeholder:text-[#D1D5DB] outline-none transition focus:ring-2 focus:ring-[#9D2E36] ${
+                        errors.email ? "border-red-600" : "border-[#647084]"
+                    }`}
                 />
 
                 {errors.email && (
-                    <p className="form-error">
+                    <p className="mt-2 text-sm text-red-700">
                         {errors.email}
                     </p>
                 )}
             </div>
 
-
-            <div className="form-group">
+            <div className="mb-5">
                 <label
                     htmlFor="signup-password"
+                    className="mb-2 block font-medium text-[#253247]"
                 >
                     Password
                 </label>
@@ -308,42 +297,34 @@ function SignupForm() {
                     id="signup-password"
                     type="password"
                     value={password}
-
                     onChange={(event) => {
-                        setPassword(
-                            event.target.value
-                        );
-
-                        setErrors(
-                            (previousErrors) => ({
-                                ...previousErrors,
-                                password: ""
-                            })
-                        );
-
+                        setPassword(event.target.value);
+                        setErrors((previousErrors) => ({
+                            ...previousErrors,
+                            password: ""
+                        }));
                         setServerError("");
                     }}
-
                     placeholder="Create a password"
                     required
-                    minLength="8"
-
-                    aria-invalid={
-                        !!errors.password
-                    }
+                    minLength={8}
+                    aria-invalid={!!errors.password}
+                    className={`w-full rounded-lg border bg-[#3D485C] px-5 py-4 text-white placeholder:text-[#D1D5DB] outline-none transition focus:ring-2 focus:ring-[#9D2E36] ${
+                        errors.password ? "border-red-600" : "border-[#647084]"
+                    }`}
                 />
 
                 {errors.password && (
-                    <p className="form-error">
+                    <p className="mt-2 text-sm text-red-700">
                         {errors.password}
                     </p>
                 )}
             </div>
 
-
-            <div className="form-group">
+            <div className="mb-5">
                 <label
                     htmlFor="confirm-password"
+                    className="mb-2 block font-medium text-[#253247]"
                 >
                     Confirm Password
                 </label>
@@ -352,66 +333,56 @@ function SignupForm() {
                     id="confirm-password"
                     type="password"
                     value={confirmPassword}
-
                     onChange={(event) => {
-                        setConfirmPassword(
-                            event.target.value
-                        );
-
-                        setErrors(
-                            (previousErrors) => ({
-                                ...previousErrors,
-                                confirmPassword: ""
-                            })
-                        );
-
+                        setConfirmPassword(event.target.value);
+                        setErrors((previousErrors) => ({
+                            ...previousErrors,
+                            confirmPassword: ""
+                        }));
                         setServerError("");
                     }}
-
                     placeholder="Repeat your password"
                     required
-
-                    aria-invalid={
-                        !!errors.confirmPassword
-                    }
+                    aria-invalid={!!errors.confirmPassword}
+                    className={`w-full rounded-lg border bg-[#3D485C] px-5 py-4 text-white placeholder:text-[#D1D5DB] outline-none transition focus:ring-2 focus:ring-[#9D2E36] ${
+                        errors.confirmPassword ? "border-red-600" : "border-[#647084]"
+                    }`}
                 />
 
                 {errors.confirmPassword && (
-                    <p className="form-error">
-                        {
-                            errors.confirmPassword
-                        }
+                    <p className="mt-2 text-sm text-red-700">
+                        {errors.confirmPassword}
                     </p>
                 )}
             </div>
 
-
             {serverError && (
-                <p className="form-error">
+                <p
+                    role="alert"
+                    className="mb-4 rounded-md bg-red-50 p-3 text-sm text-red-700"
+                >
                     {serverError}
                 </p>
             )}
 
-
             <button
                 type="submit"
                 disabled={isLoading}
+                className="w-full rounded-xl bg-[#9D2E36] px-5 py-4 font-semibold text-white transition hover:bg-[#81242C] focus:outline-none focus:ring-2 focus:ring-[#9D2E36] focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
             >
-                {isLoading
-                    ? "Joining..."
-                    : "Join the Archive"}
+                {isLoading ? "Joining..." : "Join the Archive"}
             </button>
 
-
-            <p>
+            <p className="mt-5 text-sm text-[#4B5563]">
                 Already have an account?{" "}
-
-                <Link to="/login">
+                <Link
+                    to="/login"
+                    className="font-medium text-[#9D2E36] underline-offset-4 hover:underline"
+                >
                     Log In
                 </Link>
             </p>
         </form>
     );
 }
-
 export default SignupForm;
